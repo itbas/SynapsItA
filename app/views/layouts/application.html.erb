@@ -52,10 +52,10 @@
             </div>
             <hr/>
           </li>
-          <li ng-repeat="topic in topics | filter:topicFilter">
+          <li ng-repeat="topic in topics | filter:topicFilter" ng-class="{highlight: $index == selectedIndex}">
             <div class="row">
               <div class="small-9 columns">
-                <a ng-click="viewTopic(topic.sid)">
+                <a ng-click="viewTopic(topic.sid, $index)">
                   <h4>{{topic.name}}</h4>
                 </a>
                 <h4><small>{{topic.description}}</small></h4>

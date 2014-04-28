@@ -1,23 +1,31 @@
 <div>
     <h1>Posts aus {{topic_name}}</h1>
-    <a class="button tiny" data-reveal-id="myPostModal">+</a>
+    <div class="row">            
+    	<div class="large-9 columns">
+        	<input type="text" ng-model="postFilter" placeholder="Search Posts...">
+      	</div>
+      	<div class="small-3 columns">
+    		<a class="button tiny" data-reveal-id="myPostModal">+</a>
 
-    <div id="myPostModal" class="reveal-modal" data-reveal>
-      <h2>Add Post</h2>
-      <form>
-        <textarea placeholder="Content" ng-model="formData.content"></textarea>
+		    <div id="myPostModal" class="reveal-modal" data-reveal>
+		      <h2>Add Post</h2>
+		      <form>
+		        <textarea placeholder="Content" ng-model="formData.content"></textarea>
+		        <input ng-click="createPost(formData)" class="button" value="Submit">
+		      </form>
 
-        <input ng-click="createPost(formData)" class="button" value="Submit">
-      </form>
-
-      <pre>
-        {{ formData }}
-      </pre>
-    </div>
+		      <pre>
+		        {{ formData }}
+		      </pre>
+		    </div>
+		</div>
+	</div>
     
     <ul>
-      <li ng-repeat="post in posts">
+      <li ng-repeat="post in posts | filter:postFilter">
         <p ng-bind-html="post.content | createHyperlinks"></p>
-      </li>
+        <a class="button tiny alert" ng-click="delPost(post.sid, $index)">-</a>
+        <hr/>
+      </li>      
     </ul>
 </div>

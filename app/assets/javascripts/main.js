@@ -17,6 +17,8 @@ angular.module("myapp", ["ngRoute"])
         $scope.title = "Home Page";
     })
     .controller("TopicsCtrl", function ($scope, $routeParams, $http) {
+        $(document).foundation();
+
         $http.get("/topics/" + $routeParams.id + ".json").
             success(function(data) {
                 $scope.posts = data;
@@ -32,9 +34,18 @@ angular.module("myapp", ["ngRoute"])
                 $scope.formData = {};
                 $('#myPostModal').foundation('reveal', 'close');
             });
-        }
+        };
 
-        console.log($routeParams);
+        $scope.delPost = function (topicId, $index) {
+            var toDelete = confirm('Are you absolutely sure you want to delete?');   
+
+            if (toDelete) {
+                $http.delete("/posts/" + topicId + ".json").
+                success(function(data) {
+                    $scope.posts.splice($index, 1);
+                });
+            }
+        };
     })
     .controller("NavCtrl", function ($scope, $location, $http) {
         $http.get("/topics.json").
@@ -43,7 +54,8 @@ angular.module("myapp", ["ngRoute"])
                 console.log(data);
             });
 
-        $scope.viewTopic = function (topicId) {
+        $scope.viewTopic = function (topicId, $index) {
+            $scope.selectedIndex = $index;
             $location.url("/topics/" + topicId)
         };
 

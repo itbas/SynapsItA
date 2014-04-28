@@ -1,26 +1,46 @@
-angular.module("myapp", [])
+angular.module("myapp", ["ngRoute"])
     .config(function ($routeProvider) {
         $routeProvider.
             when("/topics/:id", {templateUrl: '/assets/views/posts.html', controller: 'TopicsCtrl'}).
             otherwise({ templateUrl: '/assets/views/home.html', controller: 'IndexCtrl'});
     })
+    .filter("createHyperlinks", function ($sce) {
+        return function (str) {
+            return $sce.trustAsHtml(str.
+                                    replace(/</g, '&lt;').
+                                    replace(/>/g, '&gt;').
+                                    replace(/(http[^\s]+)/g, '<a href="$1">$1</a>')
+                                   );
+        }
+    })
     .controller("IndexCtrl", function ($scope) {
         $scope.title = "Home Page";
     })
     .controller("TopicsCtrl", function ($scope, $routeParams, $http) {
-        $scope.topic_name = "XYZ";
-
-        $http.get("/topics/" + $routeParams.id).
+        $http.get("/topics/" + $routeParams.id + ".json").
             success(function(data) {
                 $scope.posts = data;
             });
+        
+        $scope.topic_name = "XYZ";
+        
+        $scope.createPost = function(formData) {
+            $http.post("/posts.json", {topic_id: $routeParams.id, content: formData.content}).
+            success(function(data) {
+                $scope.posts.push(data);
+                
+                $scope.formData = {};
+                $('#myPostModal').foundation('reveal', 'close');
+            });
+        }
 
         console.log($routeParams);
     })
     .controller("NavCtrl", function ($scope, $location, $http) {
-        $http.get("/topics").
+        $http.get("/topics.json").
             success(function(data) {
                 $scope.topics = data;
+                console.log(data);
             });
 
         $scope.viewTopic = function (topicId) {
@@ -28,7 +48,7 @@ angular.module("myapp", [])
         };
 
         $scope.createTopic = function (formData) {
-            $http.post("/topics", formData).
+            $http.post("/topics.json", formData).
             success(function(data) {
                 console.log(data);
 
@@ -45,7 +65,7 @@ angular.module("myapp", [])
             var toDelete = confirm('Are you absolutely sure you want to delete?');   
 
             if (toDelete) {
-                $http.delete("/topics/" + topicId).
+                $http.delete("/topics/" + topicId + ".json").
                 success(function(data) {
                     $scope.topics.splice($index, 1);
                     $location.url("/")

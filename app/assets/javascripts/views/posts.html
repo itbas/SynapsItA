@@ -1,9 +1,23 @@
 <div>
     <h1>Posts aus {{topic_name}}</h1>
+    <a class="button tiny" data-reveal-id="myPostModal">+</a>
 
+    <div id="myPostModal" class="reveal-modal" data-reveal>
+      <h2>Add Post</h2>
+      <form>
+        <textarea placeholder="Content" ng-model="formData.content"></textarea>
+
+        <input ng-click="createPost(formData)" class="button" value="Submit">
+      </form>
+
+      <pre>
+        {{ formData }}
+      </pre>
+    </div>
+    
     <ul>
       <li ng-repeat="post in posts">
-        <p>{{post.content}}</p>
+        <p ng-bind-html="post.content | createHyperlinks"></p>
       </li>
     </ul>
 </div>

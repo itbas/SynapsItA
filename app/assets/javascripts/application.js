@@ -15,6 +15,7 @@
 //= require foundation
 //= require angular
 //= require angular-route
+//= require angular-animate
 //= require_tree .
 
 $(function(){ $(document).foundation(); });

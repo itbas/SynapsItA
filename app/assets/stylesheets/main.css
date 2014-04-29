@@ -1,3 +1,45 @@
-.highlight {
-  background-color: #E0E0E0;
+body {
+    background-image:url(/assets/images/wood_background.jpg);
+    color:#E0E0E0;
 }
+
+h2 {
+  color:#E0E0E0;
+}
+
+.slide {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+.slide.ng-enter,
+.slide.ng-leave {
+    -webkit-transition: all 1s ease;
+    -moz-transition: all 1s ease;
+    -o-transition: all 1s ease;
+    transition: all 1s ease;
+}
+.slide.ng-enter {
+    left: 100%;
+}
+.slide.ng-enter-active {
+    left: 0;
+}
+.slide.ng-leave {
+    left: 0;
+}
+.slide.ng-leave-active {
+    left: -100%;
+}
+
+ul { list-style:none; }
+
+#list8 ul li { font-family:Georgia,serif,Times; font-size:18px; }
+#list8 ul li a { display:block; width:300px; height:28px; background-color:#333;
+                 border-left:5px solid #222; border-right:5px solid #222;
+                 padding-left:10px; text-decoration:none; color:#bfe1f1; }
+#list8 ul li a:hover { -moz-transform:rotate(-5deg); -moz-box-shadow:10px 10px 20px #000000;
+                       -webkit-transform:rotate(-5deg); -webkit-box-shadow:10px 10px 20px #000000;
+                        transform:rotate(-5deg); box-shadow:10px 10px 20px #000000; }

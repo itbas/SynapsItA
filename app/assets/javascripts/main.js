@@ -1,7 +1,8 @@
-angular.module("myapp", ["ngRoute"])
+angular.module("myapp", ["ngRoute", "ngAnimate"])
     .config(function ($routeProvider) {
         $routeProvider.
-            when("/topics/:id", {templateUrl: '/assets/views/posts.html', controller: 'TopicsCtrl'}).
+            when("/topics", {templateUrl: '/assets/views/topics.html', controller: 'TopicsCtrl'}).
+            when("/topics/:id", {templateUrl: '/assets/views/posts.html', controller: 'PostsCtrl'}).
             otherwise({ templateUrl: '/assets/views/home.html', controller: 'IndexCtrl'});
     })
     .filter("createHyperlinks", function ($sce) {
@@ -16,7 +17,7 @@ angular.module("myapp", ["ngRoute"])
     .controller("IndexCtrl", function ($scope) {
         $scope.title = "Home Page";
     })
-    .controller("TopicsCtrl", function ($scope, $routeParams, $http) {
+    .controller("PostsCtrl", function ($scope, $routeParams, $http) {
         $(document).foundation();
 
         $http.get("/topics/" + $routeParams.id + ".json").
@@ -47,7 +48,9 @@ angular.module("myapp", ["ngRoute"])
             }
         };
     })
-    .controller("NavCtrl", function ($scope, $location, $http) {
+    .controller("TopicsCtrl", function ($scope, $location, $http) {
+        $(document).foundation();
+      
         $http.get("/topics.json").
             success(function(data) {
                 $scope.topics = data;
@@ -80,7 +83,7 @@ angular.module("myapp", ["ngRoute"])
                 $http.delete("/topics/" + topicId + ".json").
                 success(function(data) {
                     $scope.topics.splice($index, 1);
-                    $location.url("/")
+                    $location.url("/topics")
                 });
             }
         };

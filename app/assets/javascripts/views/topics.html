@@ -1,0 +1,39 @@
+<div>
+  <div id="myModal" class="reveal-modal" data-reveal>
+    <h2>Add Topic</h2>
+    <form>
+      <input type="text" placeholder="Topic name" ng-model="formData.name">
+      <textarea placeholder="Description" ng-model="formData.description"></textarea>
+
+      <input ng-click="createTopic(formData)" class="button" value="Submit">
+    </form>
+
+    <pre>
+      {{ formData }}
+    </pre>
+  </div>
+  
+  <dl class="sub-nav">
+    <dt>Topics:</dt>
+    <dd class="active"><a data-reveal-id="myModal">Add</a></dd>
+    <dd><input type="text" ng-model="topicFilter" placeholder="Search Topics..." style="height:28px;"></dd>
+  </dl>
+  <hr/>
+  <div id="list8">
+    <ul>
+      <li ng-repeat="topic in topics | filter:topicFilter" ng-class="{highlight: $index == selectedIndex}">
+        <div class="row">
+          <div class="small-9 columns">
+            <a ng-click="viewTopic(topic.sid, $index)">
+              <strong>{{topic.name}}</strong>
+              <p>{{topic.description}}</p>
+            </a>
+          </div>
+          <div class="small-3 columns">
+            <button class="button tiny alert" ng-click="delTopic(topic.sid, $index)">-</button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

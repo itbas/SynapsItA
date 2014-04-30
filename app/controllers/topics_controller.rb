@@ -1,12 +1,12 @@
 class TopicsController < ApplicationController
-  before_action :set_topic, only: [:show, :edit, :update, :destroy]
+  before_action :set_topic, only: [:show, :update, :destroy]
   skip_before_action :verify_authenticity_token
   respond_to :json
 
   # GET /topics
   # GET /topics.json
   def index
-    @topics = Topic.all
+    @topics = current_user.topics.all
     respond_with @topics
   end
 
@@ -20,7 +20,10 @@ class TopicsController < ApplicationController
   # POST /topics
   # POST /topics.json
   def create
-    respond_with Topic.create!(topic_params)
+    @topic = Topic.create(topic_params)
+    current_user.topics.push(@topic)
+    
+    respond_with @topic
   end
 
   # PATCH/PUT /topics/1

@@ -27,3 +27,5 @@ end
 gem 'mongoid', git: 'https://github.com/mongoid/mongoid.git'
 
 gem 'foundation-rails'
+
+gem 'devise'

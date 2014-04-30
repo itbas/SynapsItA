@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title><%= content_for?(:title) ? yield(:title) : "foundation-rails" %></title>
+    <title>SynapsIt</title>
 
     <%= stylesheet_link_tag    "application" %>
     <%= javascript_include_tag "vendor/modernizr" %>
@@ -24,15 +24,31 @@
         
         <section class="top-bar-section">
           <ul class="left">
-            <li><a href="/#/topics">Topics</a></li>
+            <% if user_signed_in? %>
+              <li><a href="/#/topics">Topics</a></li>
+            <% end %>
+          </ul>
+          <ul class="right">
+            <li class="divider"></li>
+            <%= render 'shared/login' %>
           </ul>
         </section>
       </nav>
     </div>
+    
+    <% flash.each do |name, msg| %>
+      <% if msg.is_a?(String) %>
+        <div data-alert class="alert-box">
+          <%= content_tag :div, msg, :id => "flash_#{name}" %>
+          <a class="close">&times;</a>
+        </div>
+      <% end %>
+    <% end %>
 
     <div class="row">
       <div class="small-12 columns">
         <%= yield %>
+        <!--%= javascript_include_tag "application" %-->
       </div>
     </div>
 

@@ -10,6 +10,9 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
             return $sce.trustAsHtml(str.
                                     replace(/</g, '&lt;').
                                     replace(/>/g, '&gt;').
+                                    replace(/\n/g, '<br>').
+                                    replace(/\t/g, '&nbsp;').
+                                    replace(/(#[^\s]+)/g, '<a href="/search/$1">$1</a>').
                                     replace(/(http[^\s]+)/g, '<a href="$1">$1</a>')
                                    );
         }
@@ -33,15 +36,28 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
                 $scope.posts.push(data);
                 
                 $scope.formData = {};
-                $('#myPostModal').foundation('reveal', 'close');
+                $('#createPostModal').foundation('reveal', 'close');
+            });
+        };
+        
+        $scope.preEditPost = function($index) {
+            $scope.formData = $scope.posts[$index];
+            $('#editPostModal').foundation('reveal', 'open');
+        }
+        
+        $scope.editPost = function(formData) {
+            $http.put("/posts/" + formData.sid + ".json", {content: formData.content}).
+            success(function(data) {
+                $scope.formData = {};
+                $('#editPostModal').foundation('reveal', 'close');
             });
         };
 
-        $scope.delPost = function (topicId, $index) {
+        $scope.delPost = function (id, $index) {
             var toDelete = confirm('Are you absolutely sure you want to delete?');   
 
             if (toDelete) {
-                $http.delete("/posts/" + topicId + ".json").
+                $http.delete("/posts/" + id + ".json").
                 success(function(data) {
                     $scope.posts.splice($index, 1);
                 });
@@ -57,9 +73,9 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
                 console.log(data);
             });
 
-        $scope.viewTopic = function (topicId, $index) {
+        $scope.viewTopic = function (id, $index) {
             $scope.selectedIndex = $index;
-            $location.url("/topics/" + topicId)
+            $location.url("/topics/" + id)
         };
 
         $scope.createTopic = function (formData) {
@@ -76,11 +92,11 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
             });
         };
 
-        $scope.delTopic = function (topicId, $index) {
+        $scope.delTopic = function (id, $index) {
             var toDelete = confirm('Are you absolutely sure you want to delete?');   
 
             if (toDelete) {
-                $http.delete("/topics/" + topicId + ".json").
+                $http.delete("/topics/" + id + ".json").
                 success(function(data) {
                     $scope.topics.splice($index, 1);
                     $location.url("/topics")

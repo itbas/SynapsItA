@@ -2,12 +2,13 @@
   <div id="myModal" class="reveal-modal" data-reveal>
     <h2>Add Topic</h2>
     <form>
-      <input type="text" placeholder="Topic name" ng-model="formData.name">
+      <input type="text" placeholder="Topic name" ng-model="formData.name" required>
       <textarea placeholder="Description" ng-model="formData.description"></textarea>
 
       <input ng-click="createTopic(formData)" class="button" value="Submit">
     </form>
-
+    <a class="close-reveal-modal">&#215;</a>
+    
     <pre>
       {{ formData }}
     </pre>
@@ -30,7 +31,7 @@
             </a>
           </div>
           <div class="small-3 columns">
-            <button class="button tiny alert" ng-click="delTopic(topic.sid, $index)">-</button>
+            <span class="round alert label" ng-click="delTopic(topic.sid, $index)">Delete</span>
           </div>
         </div>
       </li>

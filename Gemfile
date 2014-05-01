@@ -28,4 +28,5 @@ gem 'mongoid', git: 'https://github.com/mongoid/mongoid.git'
 
 gem 'foundation-rails'
 
+gem 'bcrypt'
 gem 'devise'

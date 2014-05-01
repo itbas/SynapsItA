@@ -6,15 +6,13 @@ class TopicsController < ApplicationController
   # GET /topics
   # GET /topics.json
   def index
-    @topics = current_user.topics.all
-    respond_with @topics
+    respond_with current_user.topics.all
   end
 
   # GET /topics/1
   # GET /topics/1.json
   def show
-    @posts = @topic.posts
-    respond_with @posts
+    respond_with @topic.posts
   end
 
   # POST /topics
@@ -46,6 +44,6 @@ class TopicsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def topic_params
-      params.permit(:name, :description)
+      params.permit(:name, :folder_id, :description)
     end
 end

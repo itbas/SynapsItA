@@ -1,4 +1,5 @@
 AngularFoundation::Application.routes.draw do
+  resources :folders
   resources :topics
   resources :posts
 

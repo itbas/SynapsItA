@@ -1,6 +1,7 @@
 angular.module("myapp", ["ngRoute", "ngAnimate"])
     .config(function ($routeProvider) {
         $routeProvider.
+            when("/folders/:id", {templateUrl: '/assets/views/topics.html', controller: 'TopicsCtrl'}).
             when("/topics", {templateUrl: '/assets/views/topics.html', controller: 'TopicsCtrl'}).
             when("/topics/:id", {templateUrl: '/assets/views/posts.html', controller: 'PostsCtrl'}).
             otherwise({ templateUrl: '/assets/views/home.html', controller: 'IndexCtrl'});
@@ -64,14 +65,38 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
             }
         };
     })
-    .controller("TopicsCtrl", function ($scope, $location, $http) {
+    .controller("TopicsCtrl", function ($scope, $location, $http, $routeParams) {
         $(document).foundation();
-      
-        $http.get("/topics.json").
+
+        $http.get("/folders.json").
             success(function(data) {
-                $scope.topics = data;
-                console.log(data);
+                $scope.folders = data;                
             });
+        
+        if ($routeParams.id) {
+            $http.get("/folders/" + $routeParams.id + ".json").
+                success(function(data) {
+                    $scope.topics = data;
+                });
+        }            
+        else {
+            $http.get("/topics.json").
+                success(function(data) {
+                    $scope.topics = data;
+                });
+        }
+
+        $scope.createFolder = function (formData) {
+            $http.post("/folders.json", formData).
+            success(function(data) {
+                console.log(data);
+
+                $scope.folders.push(data);
+
+                $scope.formData = {};
+                $('#folderModal').foundation('reveal', 'close');
+            });
+        };
 
         $scope.viewTopic = function (id, $index) {
             $scope.selectedIndex = $index;
@@ -86,7 +111,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
                 $scope.topics.push(data);
 
                 $scope.formData = {};
-                $('#myModal').foundation('reveal', 'close');
+                $('#topicModal').foundation('reveal', 'close');
 
                 $location.url("/topics/" + data.sid)
             });

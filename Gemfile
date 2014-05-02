@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby '2.0.0'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.4'
 
@@ -26,7 +28,7 @@ end
 
 gem 'mongoid', git: 'https://github.com/mongoid/mongoid.git'
 
-gem 'foundation-rails'
+gem 'foundation-rails', '~> 5.2.2.0'
 
-gem 'bcrypt'
-gem 'devise'
+gem 'bcrypt', '~> 3.1.7'
+gem 'devise', '~> 3.2.4'

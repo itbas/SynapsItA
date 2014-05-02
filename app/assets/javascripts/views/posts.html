@@ -1,6 +1,6 @@
 <div>
   <div id="createPostModal" class="reveal-modal" data-reveal>
-    <h2>Add Post</h2>
+    <h3>Add Post</h3>
     <form>
       <textarea placeholder="Content" ng-model="formData.content" required></textarea>
       <input ng-click="createPost(formData)" class="button" value="Submit">
@@ -13,7 +13,7 @@
   </div>
   
   <div id="editPostModal" class="reveal-modal" data-reveal>
-    <h2>Edit Post</h2>
+    <h3>Edit Post</h3>
     <form>
       <textarea placeholder="Content" ng-model="formData.content" required></textarea>
       <input ng-click="editPost(formData)" class="button" value="Submit">
@@ -25,25 +25,31 @@
     </pre>
   </div>
 	
+	<h2>Posts</h2>
+	<hr/>
+	
 	<dl class="sub-nav">
     <dt>Posts:</dt>
     <dd class="active"><a data-reveal-id="createPostModal">Add</a></dd>
     <dd><a href="javascript:history.back()">Back</a></dd>
     <dd><input type="text" ng-model="postFilter" placeholder="Search Posts..." style="height:28px;"></dd>
   </dl>
-    
-  <ul class="rectangle-list">
-    <li ng-repeat="post in posts | filter:postFilter">
-      <div class="row">
-        <div class="small-9 columns">
-          <p ng-bind-html="post.content | createHyperlinks"></p>
+  
+  <div id="list7">
+    <ul class="rectangle-list" style="font-family:Courier New">
+      <li ng-repeat="post in posts | filter:postFilter">
+        <div class="row">
+          <div class="small-10 columns">
+            <code>
+              <p ng-bind-html="post.content | createHyperlinks"></p>
+            </code>
+          </div>
+          <div class="small-2 columns">
+            <span class="round label" ng-click="preEditPost($index)">Edit</span><br>
+            <span class="round alert label" ng-click="delPost(post.sid, $index)">Delete</span>
+          </div>
         </div>
-        <div class="small-3 columns">
-          <span class="round label" ng-click="preEditPost($index)">Edit</span><br>
-          <span class="round alert label" ng-click="delPost(post.sid, $index)">Delete</span>
-        </div>
-      </div>
-      <hr/>
-    </li>      
-  </ul>
+      </li>      
+    </ul>
+  </div>
 </div>

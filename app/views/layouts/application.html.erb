@@ -24,10 +24,8 @@
         
         <section class="top-bar-section">
           <ul class="right">
-            <% if user_signed_in? %>
               <li><a href="/#/folders">Folders</a></li>
               <li><a href="/#/topics">Topics</a></li>
-            <% end %>
             <li class="divider"></li>
             <%= render 'shared/login' %>
           </ul>

@@ -1,12 +1,12 @@
 angular.module("myapp", ["ngRoute", "ngAnimate"])
-    .config(function ($routeProvider) {
+    .config(["$routeProvider", function ($routeProvider) {
         $routeProvider.
             when("/folders", {templateUrl: '/assets/views/folders.html', controller: 'FoldersCtrl'}).
             when("/folders/:id", {templateUrl: '/assets/views/topics.html', controller: 'TopicsCtrl'}).
             when("/topics", {templateUrl: '/assets/views/topics.html', controller: 'TopicsCtrl'}).
             when("/topics/:id", {templateUrl: '/assets/views/posts.html', controller: 'PostsCtrl'}).
             otherwise({ templateUrl: '/assets/views/home.html', controller: 'IndexCtrl'});
-    })
+    }])
     .filter("createHyperlinks", function ($sce) {
         return function (str) {
             return $sce.trustAsHtml(str.

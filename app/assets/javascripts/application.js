@@ -16,6 +16,7 @@
 //= require angular
 //= require angular-route
 //= require angular-animate
+//= main
 //= require_tree .
 
 $(function(){ $(document).foundation(); });

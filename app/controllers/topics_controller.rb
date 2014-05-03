@@ -6,7 +6,7 @@ class TopicsController < ApplicationController
   # GET /topics
   # GET /topics.json
   def index
-    respond_with current_user.topics.all
+    respond_with Topic.all
   end
 
   # GET /topics/1
@@ -19,7 +19,7 @@ class TopicsController < ApplicationController
   # POST /topics.json
   def create
     @topic = Topic.create(topic_params)
-    current_user.topics.push(@topic)
+#    current_user.topics.push(@topic)
     
     respond_with @topic
   end

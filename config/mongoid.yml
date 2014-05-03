@@ -68,10 +68,10 @@ test:
         max_retries: 1
         retry_interval: 0
     #Production
-production:
+roduction:
   sessions:
     default:
-      uri: <%= ENV['MONGOSOUP_URL'] %>
+      uri: <%= ENV['MONGOHQ_URL'] %>
       options:
         skip_version_check: true
         safe: true

@@ -72,12 +72,15 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.25.1)
+    mini_portile (0.5.3)
     minitest (4.7.5)
     moped (2.0.0.rc1)
       bson (~> 2.2)
       connection_pool (~> 2.0)
       optionable (~> 0.2.0)
     multi_json (1.9.3)
+    nokogiri (1.6.1-x86-mingw32)
+      mini_portile (~> 0.5.0)
     optionable (0.2.0)
     origin (2.1.1)
     orm_adapter (0.5.0)
@@ -144,6 +147,7 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails
   mongoid!
+  nokogiri
   rails (= 4.0.4)
   sass-rails (~> 4.0.2)
   sdoc

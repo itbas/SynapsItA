@@ -2,7 +2,7 @@
   <div id="folderModal" class="reveal-modal" data-reveal>
     <h3>Add Folder</h3>
     <form>
-      <input type="text" placeholder="Folder name" ng-model="formData.name" required>      
+      <input type="text" placeholder="Folder name" ng-model="formData.name" required>    
       <input ng-click="createFolder(formData)" class="button" value="Submit">
     </form>
     <a class="close-reveal-modal">&#215;</a>
@@ -32,38 +32,39 @@
     <a class="close-reveal-modal">&#215;</a>
   </div>
   
-  <h2>Topics</h2>
+  <h2>Topics <a class="round button" data-reveal-id="topicModal" style="margin-left:50px">Add</a></h2>
+
   <hr/>
-  <div id="folderMenu">
-    <ul>
-      <li><a class="button" href="/#/topics" >All</a></li>
-      <li ng-repeat="folder in folders" ng-class="{active: $index == selectedFolder}">
-        <a href="/#/folders/{{folder.sid}}">{{folder.name}}</a>
-      </li>
-      <li><a class="button" data-reveal-id="folderModal">Add Folder</a></li>
-    </ul>
-  </div>
-  <hr/>
-  
   <dl class="sub-nav">
-    <dt>Topics:</dt>
-    <dd class="active"><a data-reveal-id="topicModal">Add</a></dd>
-    <dd><input type="text" ng-model="topicFilter" placeholder="Search Topics..." style="height:28px;"></dd>
+    <dt>Folders:</dt>
+    <dd class="active"><a data-reveal-id="folderModal">Add</a></dd>
+    <dd ng-repeat="folder in folders" ng-class="{active: $index == selectedFolder}">
+        <a href="/#/folders/{{folder.sid}}">{{folder.name}}</a>
+    </dd>
+    <dd class="active"><a href="/#/topics">All</a></dd>
   </dl>
+  <hr/>
 
   <div id="list8">
     <ul>
+      <li>
+        <div class="row">
+          <div class="small-5 columns">
+            <input type="text" ng-model="topicFilter" placeholder="Filter Topics...">
+          </div>
+        </div>
+      </li>
       <li ng-repeat="topic in topics | filter:topicFilter">
         <div class="row">
           <div class="small-9 columns">
-            <a ng-click="viewTopic(topic.sid)">
+            <a ng-click="viewTopic(topic.sid, topic.name)">
               <strong>{{topic.name}}</strong>              
             </a>
             <p>{{topic.description}}</p>
           </div>
           <div class="small-3 columns">
             <span class="round label" ng-click="preEditTopic($index)">Edit</span><br>
-            <span class="round alert label" ng-click="delTopic(topic.sid, $index)">Delete</span>
+            <span class="round alert label" ng-click="delTopic(topic.sid, $index)">Del</span>
           </div>
         </div>
       </li>

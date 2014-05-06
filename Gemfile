@@ -32,3 +32,5 @@ gem 'foundation-rails', '~> 5.2.2.0'
 
 gem 'bcrypt', '~> 3.1.7'
 gem 'devise', '~> 3.2.4'
+
+gem 'nokogiri'

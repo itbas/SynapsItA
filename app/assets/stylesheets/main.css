@@ -41,9 +41,9 @@ h3 {
 ul { list-style:none; }
 
 #list7 {  }
-#list7 ul li { -moz-transform:rotate(0deg); -moz-box-shadow:0px 0px 15px #0066CC;
-                       -webkit-transform:rotate(0deg); -webkit-box-shadow:0px 0px 15px #0066CC;
-                        transform:rotate(0deg); box-shadow:0px 0px 15px #0066CC; }
+#list7 ul li { -moz-transform:translate(-15px, 0px); -moz-box-shadow:0px 0px 15px #0066CC;
+               -webkit-transform:translate(-15px, 0px); -webkit-box-shadow:0px 0px 15px #0066CC;
+                transform:translate(-15px, 0px); box-shadow:0px 0px 15px #0066CC; }
                         
 #list8 {  }
 #list8 ul li { font-family:Georgia,serif,Times; font-size:18px; }

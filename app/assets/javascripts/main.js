@@ -19,6 +19,16 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
                                    );
         }
     })
+    .service("CurrentTopicService", function() {
+        var currentTopic = "";
+
+        this.getIt = function() {
+            return currentTopic;
+        };
+        this.setIt = function(str) {
+            currentTopic = str;
+        };
+    })
     .controller("IndexCtrl", function ($scope) {
         $scope.title = "SynapsIt";
     })
@@ -42,18 +52,20 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
             }
         };
     })
-    .controller("PostsCtrl", function ($scope, $routeParams, $http) {
+    .controller("PostsCtrl", function ($scope, $routeParams, $http, CurrentTopicService) {
         $(document).foundation();
 
         $http.get("/topics/" + $routeParams.id + ".json").
             success(function(data) {
                 $scope.posts = data;
             });
-        
-        $scope.topic_name = "XYZ";
+
+        $scope.topicName = CurrentTopicService.getIt();
         
         $scope.createPost = function(formData) {
-            $http.post("/posts.json", {topic_id: $routeParams.id, content: formData.content}).
+            formData.topic_id = $routeParams.id;
+
+            $http.post("/posts.json", formData).
             success(function(data) {
                 $scope.posts.push(data);
                 
@@ -68,7 +80,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
         }
         
         $scope.editPost = function(formData) {
-            $http.put("/posts/" + formData.sid + ".json", {content: formData.content}).
+            $http.put("/posts/" + formData.sid + ".json", formData).
             success(function(data) {
                 $scope.formData = {};
                 $('#editPostModal').foundation('reveal', 'close');
@@ -86,7 +98,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
             }
         };
     })
-    .controller("TopicsCtrl", function ($scope, $location, $http, $routeParams) {
+    .controller("TopicsCtrl", function ($scope, $location, $http, $routeParams, CurrentTopicService) {
         $(document).foundation();
 
         $http.get("/folders.json").
@@ -136,7 +148,8 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
                 });
         };
 */
-        $scope.viewTopic = function (id) {
+        $scope.viewTopic = function (id, name) {
+            CurrentTopicService.setIt(name);
             $location.url("/topics/" + id)
         };
 

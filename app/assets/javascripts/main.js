@@ -156,13 +156,12 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
         $scope.createTopic = function (formData) {
             $http.post("/topics.json", formData).
             success(function(data) {
-                console.log(data);
-
                 $scope.topics.push(data);
 
                 $scope.formData = {};
                 $('#topicModal').foundation('reveal', 'close');
 
+                CurrentTopicService.setIt(data.name);
                 $location.url("/topics/" + data.sid)
             });
         };

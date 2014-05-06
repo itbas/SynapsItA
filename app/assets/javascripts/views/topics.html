@@ -1,6 +1,6 @@
 <div>
   <div id="folderModal" class="reveal-modal" data-reveal>
-    <h3>Add Folder</h3>
+    <h3 class="dark">Add Folder</h3>
     <form>
       <input type="text" placeholder="Folder name" ng-model="formData.name" required>    
       <input ng-click="createFolder(formData)" class="button" value="Submit">
@@ -9,7 +9,7 @@
   </div>
 
   <div id="topicModal" class="reveal-modal" data-reveal>
-    <h3>Add Topic</h3>
+    <h3 class="dark">Add Topic</h3>
     <form>
       <input type="text" placeholder="Topic name" ng-model="formData.name" required>
       <select ng-model="formData.folder_id" ng-options="folder.sid as folder.name for folder in folders"><option>--</option></select>
@@ -21,7 +21,7 @@
   </div>
   
   <div id="editTopicModal" class="reveal-modal" data-reveal>
-    <h3>Edit Topic</h3>
+    <h3 class="dark">Edit Topic</h3>
     <form>
       <input type="text" placeholder="Topic name" ng-model="formData.name" required>
       <select ng-model="formData.folder_id" ng-options="folder.sid as folder.name for folder in folders"><option>--</option></select>

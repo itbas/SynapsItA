@@ -1,25 +1,21 @@
 <div>
   <div id="createPostModal" class="reveal-modal" data-reveal>
-    <h3>Add Post</h3>
+    <h3 class="dark">Add Post</h3>
     <form>
       <textarea placeholder="Content" ng-model="formData.content" required></textarea>
       <input type="text" placeholder="Description" ng-model="formData.description">
-      Insert URL Title within Description? <input type="checkbox" ng-model="formData.insertTitle"><br/>
+      <label class="dark">Insert URL Title into Description?</label>
+      <input type="checkbox" ng-model="formData.insertTitle"><br/>
       <input ng-click="createPost(formData)" class="button" value="Submit">
     </form>
     <a class="close-reveal-modal">&#215;</a>
-    
-    <pre>
-      {{ formData }}
-    </pre>
   </div>
   
   <div id="editPostModal" class="reveal-modal" data-reveal>
-    <h3>Edit Post</h3>
+    <h3 class="dark">Edit Post</h3>
     <form>
       <textarea placeholder="Content" ng-model="formData.content" required></textarea>
       <input type="text" placeholder="Description" ng-model="formData.description">
-      Insert URL Title within Description? <input type="checkbox" ng-model="formData.insertTitle"><br/>
       <input ng-click="editPost(formData)" class="button" value="Submit">
     </form>
     <a class="close-reveal-modal">&#215;</a>

@@ -5,7 +5,7 @@
     <li ng-repeat="folder in folders">
       <div class="row">
         <div class="small-9 columns">
-          <p>{{folder.name}}</p>
+          <a href="/#/folders/{{folder.sid}}">{{folder.name}}</a>
         </div>
         <div class="small-3 columns">
           <span class="round alert label" ng-click="delFolder(folder.sid, $index)">Delete</span>

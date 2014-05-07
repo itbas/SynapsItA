@@ -11,6 +11,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
         return function (str) {
             return $sce.trustAsHtml(str.
                                     replace(/(http[^\s]+)/g, '<a href="$1" target="_blank">$1</a>').
+                                    replace(/(file:[^\s]+)/g, '<a href="$1" target="_blank">$1</a>').
                                     replace(/(#[^\s]+)/g, '<a href="/search/$1">$1</a>').
                                     replace(/\n/g, '<br>').
 //                                    replace(/</g, '&lt;').
@@ -18,16 +19,6 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
                                     replace(/\t/g, '&nbsp;')
                                    );
         }
-    })
-    .service("CurrentTopicService", function() {
-        var currentTopic = "";
-
-        this.getIt = function() {
-            return currentTopic;
-        };
-        this.setIt = function(str) {
-            currentTopic = str;
-        };
     })
     .controller("IndexCtrl", function ($scope) {
         $scope.title = "SynapsIt";
@@ -37,7 +28,6 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
 
         $http.get("/folders.json").
             success(function(data) {
-                console.log(data);
                 $scope.folders = data;
             });
         
@@ -52,7 +42,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
             }
         };
     })
-    .controller("PostsCtrl", function ($scope, $routeParams, $http, CurrentTopicService) {
+    .controller("PostsCtrl", function ($scope, $routeParams, $http) {
         $(document).foundation();
 
         $http.get("/topics/" + $routeParams.id + ".json").
@@ -60,30 +50,44 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
                 $scope.posts = data;
             });
 
-        $scope.topicName = CurrentTopicService.getIt();
+        $http.get("/subtopics/" + $routeParams.id + ".json").
+            success(function(data) {
+                console.log(data);
+                $scope.subtopics = data;
+            });
+
+        $http.get("/folders.json").
+            success(function(data) {
+                $scope.folders = data;
+            });
+
+        $http.get("/topics/name/" + $routeParams.id + ".json").
+            success(function(data) {
+                $scope.topicName = data;
+            });
         
         $scope.createPost = function(formData) {
             formData.topic_id = $routeParams.id;
 
             $http.post("/posts.json", formData).
             success(function(data) {
-                $scope.posts.push(data);
-                
-                $scope.formData = {};
                 $('#createPostModal').foundation('reveal', 'close');
+                $scope.formData = {};
+
+                $scope.posts.push(data);
             });
         };
         
         $scope.preEditPost = function($index) {
             $scope.formData = $scope.posts[$index];
             $('#editPostModal').foundation('reveal', 'open');
-        }
+        };
         
         $scope.editPost = function(formData) {
             $http.put("/posts/" + formData.sid + ".json", formData).
             success(function(data) {
-                $scope.formData = {};
                 $('#editPostModal').foundation('reveal', 'close');
+                $scope.formData = {};
             });
         };
 
@@ -97,8 +101,20 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
                 });
             }
         };
+
+        $scope.createSubTopic = function(formData) {
+            formData.parent_topic = $routeParams.id;
+
+            $http.post("/topics.json", formData).
+            success(function(data) {
+                $('#subTopicModal').foundation('reveal', 'close');
+                $scope.formData = {};
+
+                $scope.subtopics.push(data);
+            });
+        }
     })
-    .controller("TopicsCtrl", function ($scope, $location, $http, $routeParams, CurrentTopicService) {
+    .controller("TopicsCtrl", function ($scope, $location, $http, $routeParams) {
         $(document).foundation();
 
         $http.get("/folders.json").
@@ -106,7 +122,6 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
                 $scope.folders = data;
                 
                 this.myFolders = data;
-                console.log(this.myFolders);
             });
         
         if ($routeParams.id) {
@@ -133,10 +148,10 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
         $scope.createFolder = function (formData) {
             $http.post("/folders.json", formData).
             success(function(data) {
-                $scope.folders.push(data);
-
-                $scope.formData = {};
                 $('#folderModal').foundation('reveal', 'close');
+                $scope.formData = {};
+
+                $scope.folders.push(data);
             });
         };
 /*        
@@ -149,19 +164,16 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
         };
 */
         $scope.viewTopic = function (id, name) {
-            CurrentTopicService.setIt(name);
             $location.url("/topics/" + id)
         };
 
         $scope.createTopic = function (formData) {
             $http.post("/topics.json", formData).
             success(function(data) {
-                $scope.topics.push(data);
-
-                $scope.formData = {};
                 $('#topicModal').foundation('reveal', 'close');
+                $scope.formData = {};
 
-                CurrentTopicService.setIt(data.name);
+                $scope.topics.push(data);
                 $location.url("/topics/" + data.sid)
             });
         };
@@ -174,8 +186,8 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
         $scope.editTopic = function(formData) {
             $http.put("/topics/" + formData.sid + ".json", formData).
             success(function(data) {
-                $scope.formData = {};
                 $('#editTopicModal').foundation('reveal', 'close');
+                $scope.formData = {};
             });
         };
 

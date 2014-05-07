@@ -1,5 +1,5 @@
 class TopicsController < ApplicationController
-  before_action :set_topic, only: [:show, :update, :destroy]
+  before_action :set_topic, only: [:show, :showsubs, :name, :update, :destroy]
   skip_before_action :verify_authenticity_token
   respond_to :json
 
@@ -13,6 +13,14 @@ class TopicsController < ApplicationController
   # GET /topics/1.json
   def show
     respond_with @topic.posts
+  end
+
+  def showsubs
+    respond_with @topic.subtopics
+  end
+
+  def name
+    respond_with @topic.name
   end
 
   # POST /topics
@@ -44,6 +52,6 @@ class TopicsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def topic_params
-      params.permit(:name, :folder_id, :description)
+      params.permit(:name, :folder_id, :description, :parent_topic)
     end
 end

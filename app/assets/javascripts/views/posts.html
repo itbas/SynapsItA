@@ -20,18 +20,32 @@
     </form>
     <a class="close-reveal-modal">&#215;</a>
   </div>
+
+  <div id="subTopicModal" class="reveal-modal" data-reveal>
+    <h3 class="dark">Add Topic</h3>
+    <form>
+      <input type="text" placeholder="Topic name" ng-model="formData.name" required>
+      <select ng-model="formData.folder_id" ng-options="folder.sid as folder.name for folder in folders"><option>--</option></select>
+      <textarea placeholder="Description" ng-model="formData.description"></textarea>
+
+      <input ng-click="createSubTopic(formData)" class="button" value="Submit">
+    </form>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
 	
 	<h2>
     <!--a href="javascript:history.back()" class="button style="margin-right:50px"" >Back</a-->
     Topic {{topicName}}
-    <a data-reveal-id="createPostModal" class="round button" style="margin-left:50px">Add Post</a>
+    <a data-reveal-id="createPostModal" class="round button" style="margin-left:50px;height:40px">Add Post</a>
   </h2>
 
   <hr/>
   <dl class="sub-nav">
-    <dt>SubTopics:</dt>
-    <dd class="active"><a href="#">Add</a></dd>
-    <!--dd><a href="#">Ding</a></dd-->
+    <dt>Sub-Topics:</dt>
+    <dd class="active"><a data-reveal-id="subTopicModal">Add</a></dd>
+    <dd ng-repeat="subtopic in subtopics">
+      <a href="/#/topics/{{subtopic.sid}}">{{subtopic.name}}</a>
+    </dd>
   </dl>
   <hr/>
   

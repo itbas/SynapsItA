@@ -3,6 +3,9 @@ AngularFoundation::Application.routes.draw do
   resources :topics
   resources :posts
 
+  get 'subtopics/:id' => 'topics#showsubs'
+  get 'topics/name/:id' => 'topics#name'
+
   root to: 'main#index'
   
   devise_for :users

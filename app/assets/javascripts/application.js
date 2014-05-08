@@ -19,4 +19,9 @@
 //= main
 //= require_tree .
 
-$(function(){ $(document).foundation(); });
+$(function() {
+	$(document).foundation();
+	$(document).on("click", ".top-bar-section li", function () {
+     Foundation.libs.topbar.toggle($('.top-bar'));
+ 	});
+});

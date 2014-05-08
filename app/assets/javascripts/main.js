@@ -31,13 +31,13 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
                 $scope.folders = data;
             });
         
-        $scope.delFolder = function (id, $index) {
+        $scope.delFolder = function (item) {
             var toDelete = confirm('Are you absolutely sure you want to delete?');   
 
             if (toDelete) {
-                $http.delete("/folders/" + id + ".json").
+                $http.delete("/folders/" + item._id.$oid + ".json").
                 success(function(data) {
-                    $scope.folders.splice($index, 1);
+                    $scope.folders.splice($scope.folders.indexOf(item), 1);
                 });
             }
         };
@@ -52,7 +52,6 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
 
         $http.get("/subtopics/" + $routeParams.id + ".json").
             success(function(data) {
-                console.log(data);
                 $scope.subtopics = data;
             });
 
@@ -71,33 +70,35 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
 
             $http.post("/posts.json", formData).
             success(function(data) {
+                console.log(data);
+                
                 $('#createPostModal').foundation('reveal', 'close');
                 $scope.formData = {};
 
-                $scope.posts.push(data);
+                $scope.posts.unshift(data);
             });
         };
         
-        $scope.preEditPost = function($index) {
-            $scope.formData = $scope.posts[$index];
+        $scope.preEditPost = function(item) {
+            $scope.formData = item;
             $('#editPostModal').foundation('reveal', 'open');
         };
         
         $scope.editPost = function(formData) {
-            $http.put("/posts/" + formData.sid + ".json", formData).
+            $http.put("/posts/" + formData._id.$oid + ".json", formData).
             success(function(data) {
                 $('#editPostModal').foundation('reveal', 'close');
                 $scope.formData = {};
             });
         };
 
-        $scope.delPost = function (id, $index) {
+        $scope.delPost = function (item) {
             var toDelete = confirm('Are you absolutely sure you want to delete?');   
 
             if (toDelete) {
-                $http.delete("/posts/" + id + ".json").
+                $http.delete("/posts/" + item._id.$oid + ".json").
                 success(function(data) {
-                    $scope.posts.splice($index, 1);
+                    $scope.posts.splice($scope.posts.indexOf(item), 1);
                 });
             }
         };
@@ -131,7 +132,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
                     
                     if (this.myFolders) {
                         for (var i = 0; i < this.myFolders.length; i++) {
-                            if (this.myFolders[i].sid == $routeParams.id) {
+                            if (this.myFolders[i]._id.$oid == $routeParams.id) {
                                 $scope.selectedFolder = i;
                             }
                         }
@@ -173,31 +174,31 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
                 $('#topicModal').foundation('reveal', 'close');
                 $scope.formData = {};
 
-                $scope.topics.push(data);
-                $location.url("/topics/" + data.sid)
+                $scope.topics.unshift(data);
+                $location.url("/topics/" + data._id.$oid)
             });
         };
         
-        $scope.preEditTopic = function($index) {
-            $scope.formData = $scope.topics[$index];
+        $scope.preEditTopic = function(item) {
+            $scope.formData = item;
             $('#editTopicModal').foundation('reveal', 'open');
         }
         
         $scope.editTopic = function(formData) {
-            $http.put("/topics/" + formData.sid + ".json", formData).
+            $http.put("/topics/" + formData._id.$oid + ".json", formData).
             success(function(data) {
                 $('#editTopicModal').foundation('reveal', 'close');
                 $scope.formData = {};
             });
         };
 
-        $scope.delTopic = function (id, $index) {
+        $scope.delTopic = function (item) {
             var toDelete = confirm('Are you absolutely sure you want to delete?');   
 
             if (toDelete) {
-                $http.delete("/topics/" + id + ".json").
+                $http.delete("/topics/" + item._id.$oid + ".json").
                 success(function(data) {
-                    $scope.topics.splice($index, 1);
+                    $scope.topics.splice($scope.topics.indexOf(item), 1);
                     $location.url("/topics")
                 });
             }

@@ -1,10 +1,9 @@
 class Post
   include Mongoid::Document
-  field :sid, type: String, default: -> { _id.to_s }
   field :content, type: String
   field :description, type: String
-  field :created_at , type: DateTime, default: Time.now
-  field :updated_at , type: DateTime
+  field :created_at , type: Time, default: Time.zone.now
+  field :updated_at , type: Time
   
   validates_presence_of :content
   

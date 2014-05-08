@@ -26,6 +26,8 @@ group :doc do
   gem 'sdoc', require: false
 end
 
+gem 'rails_12factor', group: :production
+
 gem 'mongoid', git: 'https://github.com/mongoid/mongoid.git'
 
 gem 'foundation-rails', '~> 5.2.2.0'

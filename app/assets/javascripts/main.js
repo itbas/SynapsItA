@@ -4,7 +4,9 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
             when("/folders", {templateUrl: '/assets/views/folders.html', controller: 'FoldersCtrl'}).
             when("/folders/:id", {templateUrl: '/assets/views/topics.html', controller: 'TopicsCtrl'}).
             when("/topics", {templateUrl: '/assets/views/topics.html', controller: 'TopicsCtrl'}).
+            when("/posts", {templateUrl: '/assets/views/posts.html', controller: 'PostsCtrl'}).
             when("/topics/:id", {templateUrl: '/assets/views/posts.html', controller: 'PostsCtrl'}).
+//            when("/search/:str", {templateUrl: '/assets/views/search.html', controller: 'SearchCtrl'}).
             otherwise({ templateUrl: '/assets/views/home.html', controller: 'IndexCtrl'});
     }])
     .filter("createHyperlinks", function ($sce) {
@@ -12,7 +14,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
             return $sce.trustAsHtml(str.
                                     replace(/(http[^\s]+)/g, '<a href="$1" target="_blank">$1</a>').
                                     replace(/(file:[^\s]+)/g, '<a href="$1" target="_blank">$1</a>').
-                                    replace(/(#[^\s]+)/g, '<a href="/search/$1">$1</a>').
+                                    replace(/(#[^\s]+)/g, '<a href="/#/search/$1">$1</a>').
                                     replace(/\n/g, '<br>').
 //                                    replace(/</g, '&lt;').
 //                                    replace(/>/g, '&gt;').
@@ -23,6 +25,25 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
     .controller("IndexCtrl", function ($scope) {
         $scope.title = "SynapsIt";
     })
+/*
+    .controller("SearchCtrl", function ($scope, $routeParams, $http) {
+        $(document).foundation();
+
+        $scope.searchStr = $routeParams.str;
+
+        $http.get("/search/topics/" + $routeParams.str + ".json").
+            success(function(data) {
+                $scope.topics = data;
+                console.log(data);
+            });
+
+        $http.get("/search/posts/" + $routeParams.str + ".json").
+            success(function(data) {
+                $scope.posts = data;
+                console.log(data);
+            });
+    })
+*/
     .controller("FoldersCtrl", function ($scope, $http) {
         $(document).foundation();
 
@@ -45,25 +66,39 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
     .controller("PostsCtrl", function ($scope, $routeParams, $http) {
         $(document).foundation();
 
-        $http.get("/topics/" + $routeParams.id + ".json").
-            success(function(data) {
-                $scope.posts = data;
-            });
+        if ($routeParams.id)
+        {
+            $http.get("/topics/" + $routeParams.id + ".json").
+                success(function(data) {
+                    $scope.posts = data;
+                });
 
-        $http.get("/subtopics/" + $routeParams.id + ".json").
-            success(function(data) {
-                $scope.subtopics = data;
-            });
+            $http.get("/subtopics/" + $routeParams.id + ".json").
+                success(function(data) {
+                    $scope.subtopics = data;
+                });
 
-        $http.get("/folders.json").
-            success(function(data) {
-                $scope.folders = data;
-            });
+            $http.get("/folders.json").
+                success(function(data) {
+                    $scope.folders = data;
+                });
 
-        $http.get("/topics/name/" + $routeParams.id + ".json").
-            success(function(data) {
-                $scope.topicName = data;
-            });
+            $http.get("/topics/name/" + $routeParams.id + ".json").
+                success(function(data) {
+                    $scope.topicName = data;
+                });
+
+            $scope.hiding = false;
+        }
+        else {
+            $http.get("/posts.json").
+                success(function(data) {
+                    $scope.posts = data;
+                });
+
+            $scope.hiding = true;
+        }
+
         
         $scope.createPost = function(formData) {
             formData.topic_id = $routeParams.id;
@@ -71,7 +106,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
             $http.post("/posts.json", formData).
             success(function(data) {
                 console.log(data);
-                
+
                 $('#createPostModal').foundation('reveal', 'close');
                 $scope.formData = {};
 

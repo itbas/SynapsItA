@@ -36,10 +36,10 @@
 	<h2>
     <div class="row collapse">
       <div class="small-5 columns">
-        TOPIC: {{topicName}}
+        POSTS<span ng-hide="hiding"> OF: {{topicName}}</span>
       </div>
       <div class="small-1 small-7 columns">
-        <ul class="button-group radius">
+        <ul class="button-group radius" ng-hide="hiding">
           <li><a data-reveal-id="createPostModal" class="button">Add Post</a></li>
           <li><a class="button secondary" onclick="history.back();">Back</a></li>
         </ul>
@@ -47,9 +47,9 @@
     </div>
   </h2>
 
-  <hr/>
+  <hr ng-hide="hiding"/>
 
-  <dl class="sub-nav">
+  <dl class="sub-nav" ng-hide="hiding">
     <dt>Sub-Topics:</dt>
     <dd class="active"><a data-reveal-id="subTopicModal">Add</a></dd>
     <dd ng-repeat="subtopic in subtopics">

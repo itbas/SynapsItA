@@ -8,4 +8,5 @@ class Post
   validates_presence_of :content
   
   belongs_to :topic
+  belongs_to :owner, class_name: "User", inverse_of: :posts
 end

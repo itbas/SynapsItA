@@ -1,7 +1,7 @@
 class FoldersController < ApplicationController
   before_action :set_folder, only: [:show, :update, :destroy]
   skip_before_action :verify_authenticity_token
-  respond_to :html, :json
+  respond_to :json
 
   # GET /folders
   # GET /folders.json

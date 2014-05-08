@@ -38,6 +38,22 @@ h1, h2 {
     left: -100%;
 }
 
+/* crossFade */
+.crossFade.ng-enter {
+    transition-duration: 200ms;
+    opacity: 0;
+}
+.crossFade.ng-enter.ng-enter-active {
+    opacity: 1;
+}
+.crossFade.ng-leave {
+    transition-duration: 200ms;
+    opacity: 1;
+}
+.crossFade.ng-leave.ng-leave-active {
+    opacity: 0;
+}
+
 ul { list-style:none; }
 
 #postList {  }

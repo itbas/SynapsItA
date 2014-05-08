@@ -2,11 +2,14 @@ AngularFoundation::Application.routes.draw do
   resources :folders
   resources :topics
   resources :posts
+  
+  get "search/topics/:str" => "search#topics"
+  get "search/posts/:str" => "search#posts"
 
-  get 'subtopics/:id' => 'topics#showsubs'
-  get 'topics/name/:id' => 'topics#name'
+  get "subtopics/:id" => "topics#showsubs"
+  get "topics/name/:id" => "topics#name"
 
-  root to: 'main#index'
+  root to: "main#index"
   
   devise_for :users
   

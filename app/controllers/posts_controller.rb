@@ -1,11 +1,15 @@
 class PostsController < ApplicationController
   before_action :set_post, only: [:update, :destroy]
   skip_before_action :verify_authenticity_token
-  respond_to :html, :json
+  respond_to :json
 
   require "nokogiri"
   require "open-uri"
   require 'net/https'
+
+  def index
+    respond_with current_user.posts.all
+  end
   
   def create
     @post = Post.new(topic_params)
@@ -19,6 +23,8 @@ class PostsController < ApplicationController
     end
 
     @post.save
+    current_user.posts.push(@post)
+
     respond_with @post
   end
   

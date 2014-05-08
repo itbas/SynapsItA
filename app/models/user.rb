@@ -23,8 +23,9 @@ class User
   field :current_sign_in_ip, type: String
   field :last_sign_in_ip,    type: String
 
-  has_many :folders
-  has_many :topics
+  has_many :folders, dependent: :delete
+  has_many :topics, dependent: :delete
+  has_many :posts, dependent: :delete
 
   ## Confirmable
   # field :confirmation_token,   type: String

@@ -239,6 +239,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation"])
         };
         
         $scope.preEditTopic = function(item) {
+            console.log(item);
             $scope.formData = item;
             $('#editTopicModal').foundation('reveal', 'open');
         }

@@ -1,4 +1,4 @@
-angular.module("myapp", ["ngRoute", "ngAnimate"])
+angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation"])
     .config(["$routeProvider", function ($routeProvider) {
         $routeProvider.
             when("/folders", {templateUrl: '/assets/views/folders.html', controller: 'FoldersCtrl'}).
@@ -14,11 +14,10 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
             return $sce.trustAsHtml(str.
                                     replace(/(http[^\s]+)/g, '<a href="$1" target="_blank">$1</a>').
                                     replace(/(file:[^\s]+)/g, '<a href="$1" target="_blank">$1</a>').
-                                    replace(/(#[^\s]+)/g, '<a href="/#/search/$1">$1</a>').
                                     replace(/\n/g, '<br>').
+                                    replace(/ /g, '&nbsp;')
 //                                    replace(/</g, '&lt;').
 //                                    replace(/>/g, '&gt;').
-                                    replace(/\t/g, '&nbsp;')
                                    );
         }
     })
@@ -51,6 +50,19 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
             success(function(data) {
                 $scope.folders = data;
             });
+
+        $scope.preEditFolder = function(item) {
+            $scope.formData = item;
+            $('#editFolderModal').foundation('reveal', 'open');
+        };
+        
+        $scope.editFolder = function(formData) {
+            $http.put("/folders/" + formData._id.$oid + ".json", formData).
+            success(function(data) {
+                $('#editFolderModal').foundation('reveal', 'close');
+                $scope.formData = {};
+            });
+        };
         
         $scope.delFolder = function (item) {
             var toDelete = confirm('Are you absolutely sure you want to delete?');   
@@ -127,6 +139,26 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
             });
         };
 
+        $scope.preMovePost = function(item) {
+            $http.get("/topics.json").
+                success(function(data) {
+                    $scope.topics = data;
+                });
+
+            $scope.formData = item;
+            $('#movePostModal').foundation('reveal', 'open');
+        };
+
+        $scope.movePost = function(formData) {
+            $http.put("/posts/" + formData._id.$oid + ".json", formData).
+            success(function(data) {
+                $('#movePostModal').foundation('reveal', 'close');
+                $scope.formData = {};
+
+                $scope.posts.splice($scope.posts.indexOf(formData), 1);
+            });
+        };
+
         $scope.delPost = function (item) {
             var toDelete = confirm('Are you absolutely sure you want to delete?');   
 
@@ -190,15 +222,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate"])
                 $scope.folders.push(data);
             });
         };
-/*        
-        $scope.viewTopicsOfFolder = function (id, $index) {
-            $http.get("/folders/" + id + ".json").
-                success(function(data) {
-                    $scope.selectedFolder = $index;
-                    $scope.topics = data;
-                });
-        };
-*/
+
         $scope.viewTopic = function (id, name) {
             $location.url("/topics/" + id)
         };

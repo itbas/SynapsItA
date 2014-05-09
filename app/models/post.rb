@@ -2,8 +2,8 @@ class Post
   include Mongoid::Document
   field :content, type: String
   field :description, type: String
-  field :created_at , type: Time, default: Time.zone.now
-  field :updated_at , type: Time
+  field :created_at , type: DateTime, default: Time.zone.now
+  field :updated_at , type: DateTime
   
   validates_presence_of :content
   

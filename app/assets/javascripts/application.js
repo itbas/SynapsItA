@@ -16,6 +16,7 @@
 //= require angular
 //= require angular-route
 //= require angular-animate
+//= require mm-foundation-tpls-0.2.0
 //= main
 //= require_tree .
 

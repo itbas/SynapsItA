@@ -12,10 +12,10 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation"])
     .filter("createHyperlinks", function ($sce) {
         return function (str) {
             return $sce.trustAsHtml(str.
+                                    replace(/ /g, '&nbsp;').
                                     replace(/(http[^\s]+)/g, '<a href="$1" target="_blank">$1</a>').
                                     replace(/(file:[^\s]+)/g, '<a href="$1" target="_blank">$1</a>').
-                                    replace(/\n/g, '<br>').
-                                    replace(/ /g, '&nbsp;')
+                                    replace(/\n/g, '<br>')
 //                                    replace(/</g, '&lt;').
 //                                    replace(/>/g, '&gt;').
                                    );

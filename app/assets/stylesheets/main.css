@@ -21,6 +21,19 @@ h1, h2 {
 .dark {
   color:#080808;
 }
+
+.post-list {
+  background:#0F0F0F;
+}
+.post-list.ng-enter {
+  -webkit-transition:1.5s linear all;
+  transition:1.5s linear all;
+  background-color: #0066CC;
+}
+.post-list.ng-enter-active {
+  background-color: #0F0F0F;
+}
+
 /*
 .slide {
     position: absolute;

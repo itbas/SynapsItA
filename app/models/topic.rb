@@ -9,6 +9,8 @@ class Topic
 
   has_many :subtopics, class_name: "Topic", dependent: :delete
   has_many :posts, dependent: :delete
+
+  has_and_belongs_to_many :shared_with, class_name: "User", inverse_of: :share
   
   belongs_to :folder, inverse_of: :topics
   belongs_to :owner, class_name: "User", inverse_of: :topics

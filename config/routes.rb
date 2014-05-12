@@ -2,12 +2,20 @@ AngularFoundation::Application.routes.draw do
   resources :folders
   resources :topics
   resources :posts
-  
+
+  get "share/list" => "share#list"
+  get "share/users" => "share#users"
+
   get "search/topics/:str" => "search#topics"
   get "search/posts/:str" => "search#posts"
 
   get "subtopics/:id" => "topics#showsubs"
   get "topics/name/:id" => "topics#name"
+
+  get "messages/in" => "messages#msg_in"
+  get "messages/out" => "messages#msg_out"
+  post "messages" => "messages#create"
+  delete "messages/:id" => "messages#destroy"
 
   root to: "main#index"
   

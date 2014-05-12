@@ -6,7 +6,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation"])
             when("/topics", {templateUrl: '/assets/views/topics.html', controller: 'TopicsCtrl'}).
             when("/posts", {templateUrl: '/assets/views/posts.html', controller: 'PostsCtrl'}).
             when("/topics/:id", {templateUrl: '/assets/views/posts.html', controller: 'PostsCtrl'}).
-//            when("/search/:str", {templateUrl: '/assets/views/search.html', controller: 'SearchCtrl'}).
+            when("/shares", {templateUrl: '/assets/views/topics.html', controller: 'SharesCtrl'}).
             otherwise({ templateUrl: '/assets/views/home.html', controller: 'IndexCtrl'});
     }])
     .filter("createHyperlinks", function ($sce) {
@@ -24,25 +24,18 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation"])
     .controller("IndexCtrl", function ($scope) {
         $scope.title = "SynapsIt";
     })
-/*
-    .controller("SearchCtrl", function ($scope, $routeParams, $http) {
+    .controller("SharesCtrl", function ($scope, $http, $location) {
         $(document).foundation();
 
-        $scope.searchStr = $routeParams.str;
-
-        $http.get("/search/topics/" + $routeParams.str + ".json").
+        $http.get("/share/list.json").
             success(function(data) {
                 $scope.topics = data;
-                console.log(data);
             });
 
-        $http.get("/search/posts/" + $routeParams.str + ".json").
-            success(function(data) {
-                $scope.posts = data;
-                console.log(data);
-            });
+        $scope.viewTopic = function (id) {
+            $location.url("/topics/" + id)
+        };
     })
-*/
     .controller("FoldersCtrl", function ($scope, $http) {
         $(document).foundation();
 
@@ -113,7 +106,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation"])
 
         
         $scope.createPost = function(formData) {
-            formData.topic_id = $routeParams.id;
+            formData.topic = $routeParams.id;
 
             $http.post("/posts.json", formData).
             success(function(data) {
@@ -223,7 +216,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation"])
             });
         };
 
-        $scope.viewTopic = function (id, name) {
+        $scope.viewTopic = function (id) {
             $location.url("/topics/" + id)
         };
 
@@ -239,8 +232,12 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation"])
         };
         
         $scope.preEditTopic = function(item) {
-            console.log(item);
             $scope.formData = item;
+
+            if (item.folder_id) {
+                $scope.formData.folder_id = item.folder_id.$oid;
+            }
+
             $('#editTopicModal').foundation('reveal', 'open');
         }
         
@@ -248,6 +245,27 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation"])
             $http.put("/topics/" + formData._id.$oid + ".json", formData).
             success(function(data) {
                 $('#editTopicModal').foundation('reveal', 'close');
+                $scope.formData = {};
+
+                console.log(data);
+            });
+        };
+
+        $scope.preShareTopic = function(item) {
+            $scope.formData = item;
+
+            $http.get("/share/users.json").
+                success(function(data) {
+                    $scope.users = data;
+                });
+
+            $('#shareTopicModal').foundation('reveal', 'open');
+        }
+
+        $scope.shareTopic = function(formData) {
+            $http.put("/topics/" + formData._id.$oid + ".json", formData).
+            success(function(data) {
+                $('#shareTopicModal').foundation('reveal', 'close');
                 $scope.formData = {};
             });
         };

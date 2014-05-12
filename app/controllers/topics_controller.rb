@@ -35,7 +35,18 @@ class TopicsController < ApplicationController
   # PATCH/PUT /topics/1
   # PATCH/PUT /topics/1.json
   def update
-    respond_with @topic.update(topic_params)    
+    @topic.update(topic_params)
+
+    unless params[:shared_with_ids].nil?
+      params[:shared_with_ids].each do |shared_with_id|
+        @user = User.find(shared_with_id)
+
+        @topic.shared_with.push(@user)
+        @user.share.push(@topic)
+      end
+    end
+
+    respond_with @topic
   end
 
   # DELETE /topics/1
@@ -52,6 +63,6 @@ class TopicsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def topic_params
-      params.permit(:name, :folder_id, :description, :parent_topic)
+      params.permit(:name, :folder_id, :description, :parent_topic, :shared_with_ids)
     end
 end

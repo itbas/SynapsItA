@@ -78,7 +78,7 @@
 
   <div>
     <ul>
-      <li style="background:#0F0F0F" ng-repeat="post in posts | filter:postFilter | orderBy: '-created_at'">
+      <li class="post-list" ng-repeat="post in posts | filter:postFilter | orderBy: '-created_at'">
         <div class="row">
           <div class="small-10 columns" style="font-family:Courier New">
             <small> {{post.created_at | date:'yyyy-MM-dd  HH:mm:ss'}} <a class="round label" dropdown-toggle="#action_{{post._id.$oid}}" style="margin-top:25px;margin-right:5px">Actions</a></small>

@@ -31,6 +31,15 @@
     </form>
     <a class="close-reveal-modal">&#215;</a>
   </div>
+
+  <div id="shareTopicModal" class="reveal-modal" data-reveal>
+    <h3 class="dark">Share Topic</h3>
+    <form>
+      <select size="10" multiple ng-multiple="true" ng-model="formData.shared_with_ids" ng-options="user._id.$oid as user.email for user in users"></select>
+      <a ng-click="shareTopic(formData)" class="button">Submit</a>
+    </form>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
   
   <h2>
     <div class="row collapse">
@@ -69,7 +78,7 @@
       <li ng-repeat="topic in topics | filter:topicFilter | orderBy: 'name'">
         <div class="row">
           <div id="topicList" class="small-9 columns">
-            <a ng-click="viewTopic(topic._id.$oid, topic.name)">
+            <a ng-click="viewTopic(topic._id.$oid)">
               <strong>{{topic.name}}</strong>              
             </a>
             <p>{{topic.description}}</p>
@@ -78,6 +87,7 @@
             <a class="round label" dropdown-toggle="#action_{{topic._id.$oid}}" style="margin-right:5px">Action</a>
             <ul id="action_{{topic._id.$oid}}" class="f-dropdown">
               <li><a ng-click="preEditTopic(topic)">Edit</a></li>
+              <li><a ng-click="preShareTopic(topic)">Share</a></li>
               <li><a ng-click="delTopic(topic)">Delete</a></li>
             </ul>
           </div>

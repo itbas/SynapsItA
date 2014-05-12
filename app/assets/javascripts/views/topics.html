@@ -35,7 +35,7 @@
   <div id="shareTopicModal" class="reveal-modal" data-reveal>
     <h3 class="dark">Share Topic</h3>
     <form>
-      <select size="10" multiple ng-multiple="true" ng-model="formData.shared_with_ids" ng-options="user._id.$oid as user.email for user in users"></select>
+      <select style="height:150px" multiple ng-multiple="true" ng-model="formData.shared_with_ids" ng-options="user._id.$oid as user.email for user in users"></select>
       <a ng-click="shareTopic(formData)" class="button">Submit</a>
     </form>
     <a class="close-reveal-modal">&#215;</a>

@@ -252,7 +252,15 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation"])
         };
 
         $scope.preShareTopic = function(item) {
-            $scope.formData = item;
+            $scope.formData = item;           
+            i = 0;
+
+            if (item) {
+                item.shared_with_ids.forEach (function (entry) {
+                    $scope.formData.shared_with_ids[i] = entry.$oid;
+                });
+            }
+            console.log($scope.formData);
 
             $http.get("/share/users.json").
                 success(function(data) {

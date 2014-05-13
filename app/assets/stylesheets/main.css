@@ -18,6 +18,10 @@ h1, h2 {
   color:#E8E8E8;
 }
 
+.text-area {
+  height:100px;
+}
+
 .dark {
   color:#080808;
 }

@@ -27,6 +27,8 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation"])
     .controller("SharesCtrl", function ($scope, $http, $location) {
         $(document).foundation();
 
+        $scope.isShared = true;
+
         $http.get("/share/list.json").
             success(function(data) {
                 $scope.topics = data;
@@ -110,8 +112,6 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation"])
 
             $http.post("/posts.json", formData).
             success(function(data) {
-                console.log(data);
-
                 $('#createPostModal').foundation('reveal', 'close');
                 $scope.formData = {};
 
@@ -178,6 +178,11 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation"])
     .controller("TopicsCtrl", function ($scope, $location, $http, $routeParams) {
         $(document).foundation();
 
+        $http.get("/share/users.json").
+                success(function(data) {
+                    $scope.users = data;
+                });
+
         $http.get("/folders.json").
             success(function(data) {
                 $scope.folders = data;
@@ -189,7 +194,18 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation"])
             $http.get("/folders/" + $routeParams.id + ".json").
                 success(function(data) {
                     $scope.topics = data;
-                    
+
+                    if ($scope.topics) {
+                        $scope.topics.forEach (function (topic) {
+                            if (topic.shared_with_ids) {
+                                i = 0;
+                                topic.shared_with_ids.forEach (function (entry) {
+                                    topic.shared_with_ids[i] = entry.$oid;
+                                });
+                            }
+                        });
+                    }
+                                
                     if (this.myFolders) {
                         for (var i = 0; i < this.myFolders.length; i++) {
                             if (this.myFolders[i]._id.$oid == $routeParams.id) {
@@ -203,6 +219,17 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation"])
             $http.get("/topics.json").
                 success(function(data) {
                     $scope.topics = data;
+
+                    if ($scope.topics) {
+                        $scope.topics.forEach (function (topic) {
+                            if (topic.shared_with_ids) {
+                                i = 0;
+                                topic.shared_with_ids.forEach (function (entry) {
+                                    topic.shared_with_ids[i] = entry.$oid;
+                                });
+                            }
+                        });
+                    }
                 });
         }
 
@@ -246,21 +273,11 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation"])
             success(function(data) {
                 $('#editTopicModal').foundation('reveal', 'close');
                 $scope.formData = {};
-
-                console.log(data);
             });
         };
 
         $scope.preShareTopic = function(item) {
-            $scope.formData = item;           
-            i = 0;
-
-            if (item) {
-                item.shared_with_ids.forEach (function (entry) {
-                    $scope.formData.shared_with_ids[i] = entry.$oid;
-                });
-            }
-            console.log($scope.formData);
+            $scope.formData = item;
 
             $http.get("/share/users.json").
                 success(function(data) {
@@ -271,7 +288,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation"])
         }
 
         $scope.shareTopic = function(formData) {
-            $http.put("/topics/" + formData._id.$oid + ".json", formData).
+            $http.put("/share/save/" + formData._id.$oid + ".json", formData).
             success(function(data) {
                 $('#shareTopicModal').foundation('reveal', 'close');
                 $scope.formData = {};

@@ -35,18 +35,7 @@ class TopicsController < ApplicationController
   # PATCH/PUT /topics/1
   # PATCH/PUT /topics/1.json
   def update
-    @topic.update(topic_params)
-
-    unless params[:shared_with_ids].nil?
-      params[:shared_with_ids].each do |shared_with_id|
-        @user = User.find(shared_with_id)
-
-        @topic.shared_with.push(@user)
-        @user.share.push(@topic)
-      end
-    end
-
-    respond_with @topic
+    respond_with @topic.update(topic_params)
   end
 
   # DELETE /topics/1

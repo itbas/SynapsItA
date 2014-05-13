@@ -33,9 +33,12 @@
   </div>
 
   <div id="shareTopicModal" class="reveal-modal" data-reveal>
-    <h3 class="dark">Share Topic</h3>
+    <h3 class="dark">
+      Share Topic
+      <a ng-click="formData.shared_with_ids = {}" class="tiny button">Unshare</a>
+    </h3>
     <form>
-      <select style="height:150px" multiple ng-multiple="true" ng-model="formData.shared_with_ids" ng-options="user._id.$oid as user.email for user in users"></select>
+      <select size="5" class="text-area" multiple ng-multiple="true" ng-model="formData.shared_with_ids" ng-options="user._id.$oid as user.email for user in users"></select>
       <a ng-click="shareTopic(formData)" class="button">Submit</a>
     </form>
     <a class="close-reveal-modal">&#215;</a>
@@ -44,17 +47,17 @@
   <h2>
     <div class="row collapse">
       <div class="small-5 columns">
-        TOPICS
+        <span ng-show="isShared">SHARED&nbsp;</span>TOPICS
       </div>
-      <div class="small-1 small-7 columns">
+      <div class="small-1 small-7 columns" ng-hide="isShared">
         <a class="radius button" data-reveal-id="topicModal">Add Topic</a>
       </div>
     </div>
   </h2>
 
-  <hr/>
+  <hr ng-hide="isShared"/>
 
-  <dl class="sub-nav">
+  <dl class="sub-nav" ng-hide="isShared">
     <dt>Folders:</dt>
     <dd class="active"><a data-reveal-id="folderModal">Add</a></dd>
     <dd ng-repeat="folder in folders" ng-class="{active: $index == selectedFolder}">
@@ -79,7 +82,8 @@
         <div class="row">
           <div id="topicList" class="small-9 columns">
             <a ng-click="viewTopic(topic._id.$oid)">
-              <strong>{{topic.name}}</strong>              
+              <strong>{{topic.name}}</strong> 
+              <small ng-hide="topic.shared_with_ids.length == 0">Shared {{topic.shared_with_ids.length}}</small>             
             </a>
             <p>{{topic.description}}</p>
           </div>

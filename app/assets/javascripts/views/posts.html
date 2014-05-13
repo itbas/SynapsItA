@@ -2,7 +2,7 @@
   <div id="createPostModal" class="reveal-modal" data-reveal>
     <h3 class="dark">Add Post</h3>
     <form>
-      <textarea placeholder="Content" ng-model="formData.content" required></textarea>
+      <textarea class="text-area" placeholder="Content" ng-model="formData.content" required></textarea>
       <input type="text" placeholder="Description" ng-model="formData.description">
       <label class="dark">Insert URL Title into Description?</label>
       <input type="checkbox" ng-model="formData.insertTitle"><br/>
@@ -14,7 +14,7 @@
   <div id="editPostModal" class="reveal-modal" data-reveal>
     <h3 class="dark">Edit Post</h3>
     <form>
-      <textarea placeholder="Content" ng-model="formData.content" required></textarea>
+      <textarea class="text-area" placeholder="Content" ng-model="formData.content" required></textarea>
       <input type="text" placeholder="Description" ng-model="formData.description">
       <a ng-click="editPost(formData)" class="button">Submit</a>
     </form>

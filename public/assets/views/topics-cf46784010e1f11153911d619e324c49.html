@@ -1,0 +1,103 @@
+<div>
+  <div id="folderModal" class="reveal-modal" data-reveal>
+    <h3 class="dark">Add Folder</h3>
+    <form>
+      <input type="text" placeholder="Folder name" ng-model="formData.name" required>    
+      <a ng-click="createFolder(formData)" class="button">Submit</a>
+    </form>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+
+  <div id="topicModal" class="reveal-modal" data-reveal>
+    <h3 class="dark">Add Topic</h3>
+    <form>
+      <input type="text" placeholder="Topic name" ng-model="formData.name" required>
+      <select ng-model="formData.folder_id" ng-options="folder._id.$oid as folder.name for folder in folders"><option>--</option></select>
+      <textarea placeholder="Description" ng-model="formData.description"></textarea>
+
+      <a ng-click="createTopic(formData)" class="button">Submit</a>
+    </form>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+  
+  <div id="editTopicModal" class="reveal-modal" data-reveal>
+    <h3 class="dark">Edit Topic</h3>
+    <form>
+      <input type="text" placeholder="Topic name" ng-model="formData.name" required>
+      <select ng-model="formData.folder_id" ng-options="folder._id.$oid as folder.name for folder in folders"></select>
+      <textarea placeholder="Description" ng-model="formData.description"></textarea>
+
+      <a ng-click="editTopic(formData)" class="button">Submit</a>
+    </form>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+
+  <div id="shareTopicModal" class="reveal-modal" data-reveal>
+    <h3 class="dark">
+      Share Topic
+      <a ng-click="formData.shared_with_ids = {}" class="tiny button">Unshare</a>
+    </h3>
+    <form>
+      <select size="5" class="text-area" multiple ng-multiple="true" ng-model="formData.shared_with_ids" ng-options="user._id.$oid as user.email for user in users"></select>
+      <a ng-click="shareTopic(formData)" class="button">Submit</a>
+    </form>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+  
+  <h2>
+    <div class="row collapse">
+      <div class="small-5 columns">
+        <span ng-show="isShared">SHARED&nbsp;</span>TOPICS
+      </div>
+      <div class="small-1 small-7 columns" ng-hide="isShared">
+        <a class="radius button" data-reveal-id="topicModal">Add Topic</a>
+      </div>
+    </div>
+  </h2>
+
+  <hr ng-hide="isShared"/>
+
+  <dl class="sub-nav" ng-hide="isShared">
+    <dt>Folders:</dt>
+    <dd class="active"><a data-reveal-id="folderModal">Add</a></dd>
+    <dd ng-repeat="folder in folders" ng-class="{active: $index == selectedFolder}">
+        <a href="/#/folders/{{folder._id.$oid}}">{{folder.name}}</a>
+    </dd>
+    <dd class="active"><a href="/#/topics">All</a></dd>
+  </dl>
+  <hr/>
+<div>
+  <div class="row collapse">
+    <div class="small-5 columns">
+      <input type="text" ng-model="topicFilter" placeholder="Filter Topics...">
+    </div>
+    <div class="small-1 small-7 columns">
+      <button ng-click="topicFilter = ''" class="alert button small" style="height:37px">X</button>
+    </div>
+  </div>
+
+  <div>
+    <ul>
+      <li ng-repeat="topic in topics | filter:topicFilter | orderBy: 'name'">
+        <div class="row">
+          <div id="topicList" class="small-9 columns">
+            <a ng-click="viewTopic(topic._id.$oid)">
+              <strong>{{topic.name}}</strong> 
+              <small ng-hide="topic.shared_with_ids.length == 0">Shared {{topic.shared_with_ids.length}}</small>             
+            </a>
+            <p>{{topic.description}}</p>
+          </div>
+          <div class="small-2 columns">
+            <a class="round label" dropdown-toggle="#action_{{topic._id.$oid}}" style="margin-right:5px">Action</a>
+            <ul id="action_{{topic._id.$oid}}" class="f-dropdown">
+              <li><a ng-click="preEditTopic(topic)">Edit</a></li>
+              <li><a ng-click="preShareTopic(topic)">Share</a></li>
+              <li><a ng-click="delTopic(topic)">Delete</a></li>
+            </ul>
+          </div>
+        </div>
+        <hr/>
+      </li>
+    </ul>
+  </div>
+</div>

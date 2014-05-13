@@ -112,6 +112,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation"])
 
             $http.post("/posts.json", formData).
             success(function(data) {
+                console.log(data);
                 $('#createPostModal').foundation('reveal', 'close');
                 $scope.formData = {};
 

@@ -108,7 +108,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation"])
 
         
         $scope.createPost = function(formData) {
-            formData.topic = $routeParams.id;
+            formData.topic_id = $routeParams.id;
 
             $http.post("/posts.json", formData).
             success(function(data) {

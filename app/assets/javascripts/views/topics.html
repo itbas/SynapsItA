@@ -87,7 +87,7 @@
             </a>
             <p>{{topic.description}}</p>
           </div>
-          <div class="small-2 columns">
+          <div class="small-2 columns" ng-hide="isShared">
             <a class="round label" dropdown-toggle="#action_{{topic._id.$oid}}" style="margin-right:5px">Action</a>
             <ul id="action_{{topic._id.$oid}}" class="f-dropdown">
               <li><a ng-click="preEditTopic(topic)">Edit</a></li>

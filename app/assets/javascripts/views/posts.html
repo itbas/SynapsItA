@@ -4,8 +4,8 @@
     <form>
       <textarea class="text-area" placeholder="Content" ng-model="formData.content" required></textarea>
       <input type="text" placeholder="Description" ng-model="formData.description">
-      <label class="dark">Insert URL Title into Description?</label>
-      <input type="checkbox" ng-model="formData.insertTitle"><br/>
+      <input type="checkbox" ng-model="formData.insertTitle">&nbsp;<label class="dark">Insert URL title into Description</label><br>
+      <input type="checkbox" ng-model="formData.insertMeta">&nbsp;<label class="dark">Collect URL meta data for Filtering</label><br>
       <a ng-click="createPost(formData)" class="button">Submit</a>
     </form>
     <a class="close-reveal-modal">&#215;</a>

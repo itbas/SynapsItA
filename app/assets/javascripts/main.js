@@ -111,13 +111,12 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation"])
             formData.topic_id = $routeParams.id;
 
             $http.post("/posts.json", formData).
-            success(function(data) {
-                console.log(data);
-                $('#createPostModal').foundation('reveal', 'close');
-                $scope.formData = {};
+                success(function(data) {
+                    $('#createPostModal').foundation('reveal', 'close');
+                    $scope.formData = {};
 
-                $scope.posts.unshift(data);
-            });
+                    $scope.posts.unshift(data);
+                });
         };
         
         $scope.preEditPost = function(item) {

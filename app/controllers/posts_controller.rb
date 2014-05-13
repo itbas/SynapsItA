@@ -13,11 +13,20 @@ class PostsController < ApplicationController
   
   def create
     @post = Post.new(topic_params)
-    unless params[:insertTitle].nil?
+    if params[:insertTitle] || params[:insertMeta]
       @post.content.split(" ").each do |token|
         if token.match(/^http/)
           page = Nokogiri::HTML(open(token, :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE))
-          @post.description = page.at_css("title").text unless page.nil?
+
+          unless page.nil?
+            unless params[:insertTitle].nil?
+              @post.description = page.at_css("title").text
+            end
+
+            unless params[:insertMeta].nil?
+              @post.linked_metas = page.css("body h1").text.split(" ") << page.css("body p").text.split(" ").uniq
+            end
+          end
         end
       end
     end
@@ -29,7 +38,7 @@ class PostsController < ApplicationController
   end
   
   def update
-    respond_with @post.update(topic_params)    
+    respond_with @post.update(topic_params)
   end
   
   def destroy

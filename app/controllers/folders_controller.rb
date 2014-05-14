@@ -6,13 +6,13 @@ class FoldersController < ApplicationController
   # GET /folders
   # GET /folders.json
   def index
-    respond_with current_user.folders.all
+    respond_with current_user ? current_user.folders.all : ""
   end
 
   # GET /folders/1
   # GET /folders/1.json
   def show
-    respond_with @folder.topics
+    respond_with current_user ? @folder.topics : ""
   end
 
   # POST /folders

@@ -2,10 +2,80 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation"])
     .config(["$routeProvider", function ($routeProvider) {
         $routeProvider.
             when("/folders", {templateUrl: '/assets/views/folders.html', controller: 'FoldersCtrl'}).
-            when("/folders/:id", {templateUrl: '/assets/views/topics.html', controller: 'TopicsCtrl'}).
-            when("/topics", {templateUrl: '/assets/views/topics.html', controller: 'TopicsCtrl'}).
-            when("/posts", {templateUrl: '/assets/views/posts.html', controller: 'PostsCtrl'}).
-            when("/topics/:id", {templateUrl: '/assets/views/posts.html', controller: 'PostsCtrl'}).
+            when("/folders/:id", {templateUrl: '/assets/views/topics.html', controller: 'TopicsCtrl',
+                resolve: {
+                    users: function($http) {
+                        return $http.get("/share/users.json").success(function(data) {
+                            return data;
+                        });
+                    },
+                    folders: function($http) {
+                        return $http.get("/folders.json").success(function(data) {
+                            return data;
+                        });
+                    },
+                    topics: function($http, $route) {
+                        return $http.get("/folders/" + $route.current.params.id + ".json").success(function(data) {
+                            return data;
+                        });
+                    }
+                }
+            }).
+            when("/topics", {templateUrl: '/assets/views/topics.html', controller: 'TopicsCtrl',
+                resolve: {
+                    users: function($http) {
+                        return $http.get("/share/users.json").success(function(data) {
+                            return data;
+                        });
+                    },
+                    folders: function($http) {
+                        return $http.get("/folders.json").success(function(data) {
+                            return data;
+                        });
+                    },
+                    topics: function($http) {
+                        return $http.get("/topics.json").success(function(data) {
+                            return data;
+                        });
+                    }
+                }
+            }).
+            when("/posts", {templateUrl: '/assets/views/posts.html', controller: 'PostsCtrl',
+                resolve: {
+                    posts: function($http) {
+                        return $http.get("/posts.json").success(function(data) {
+                            return data;
+                        });
+                    },
+                    folders: function() { return 0; },
+                    subtopics: function() { return 0; },
+                    topicname: function() { return 0; }
+                }
+            }).
+            when("/topics/:id", {templateUrl: '/assets/views/posts.html', controller: 'PostsCtrl',
+                resolve: {
+                    posts: function($http, $route) {
+                        return $http.get("/topics/" + $route.current.params.id + ".json").success(function(data) {
+                            return data;
+                        });
+                    },
+                    folders: function($http) {
+                        return $http.get("/folders.json").success(function(data) {
+                            return data;
+                        });
+                    },
+                    subtopics: function($http, $route) {
+                        return $http.get("/subtopics/" + $route.current.params.id + ".json").success(function(data) {
+                            return data;
+                        });
+                    },
+                    topicname: function($http, $route) {
+                        return $http.get("/topics/name/" + $route.current.params.id + ".json").success(function(data) {
+                            return data;
+                        });
+                    }
+                }
+            }).
             when("/shares", {templateUrl: '/assets/views/topics.html', controller: 'SharesCtrl'}).
             otherwise({ templateUrl: '/assets/views/home.html', controller: 'IndexCtrl'});
     }])
@@ -70,167 +140,30 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation"])
             }
         };
     })
-    .controller("PostsCtrl", function ($scope, $routeParams, $http) {
+    .controller("TopicsCtrl", function ($scope, $location, $http, $routeParams, users, folders, topics) {
         $(document).foundation();
 
-        if ($routeParams.id)
-        {
-            $http.get("/topics/" + $routeParams.id + ".json").
-                success(function(data) {
-                    $scope.posts = data;
-                });
+        $scope.users = users.data;
+        $scope.folders = folders.data;
+        $scope.topics = topics.data;
 
-            $http.get("/subtopics/" + $routeParams.id + ".json").
-                success(function(data) {
-                    $scope.subtopics = data;
-                });
-
-            $http.get("/folders.json").
-                success(function(data) {
-                    $scope.folders = data;
-                });
-
-            $http.get("/topics/name/" + $routeParams.id + ".json").
-                success(function(data) {
-                    $scope.topicName = data;
-                });
-
-            $scope.hiding = false;
-        }
-        else {
-            $http.get("/posts.json").
-                success(function(data) {
-                    $scope.posts = data;
-                });
-
-            $scope.hiding = true;
-        }
-
-        
-        $scope.createPost = function(formData) {
-            formData.topic_id = $routeParams.id;
-
-            $http.post("/posts.json", formData).
-                success(function(data) {
-                    $('#createPostModal').foundation('reveal', 'close');
-                    $scope.formData = {};
-
-                    $scope.posts.unshift(data);
-                });
-        };
-        
-        $scope.preEditPost = function(item) {
-            $scope.formData = item;
-            $('#editPostModal').foundation('reveal', 'open');
-        };
-        
-        $scope.editPost = function(formData) {
-            $http.put("/posts/" + formData._id.$oid + ".json", formData).
-            success(function(data) {
-                $('#editPostModal').foundation('reveal', 'close');
-                $scope.formData = {};
-            });
-        };
-
-        $scope.preMovePost = function(item) {
-            $http.get("/topics.json").
-                success(function(data) {
-                    $scope.topics = data;
-                });
-
-            $scope.formData = item;
-            $('#movePostModal').foundation('reveal', 'open');
-        };
-
-        $scope.movePost = function(formData) {
-            $http.put("/posts/" + formData._id.$oid + ".json", formData).
-            success(function(data) {
-                $('#movePostModal').foundation('reveal', 'close');
-                $scope.formData = {};
-
-                $scope.posts.splice($scope.posts.indexOf(formData), 1);
-            });
-        };
-
-        $scope.delPost = function (item) {
-            var toDelete = confirm('Are you absolutely sure you want to delete?');   
-
-            if (toDelete) {
-                $http.delete("/posts/" + item._id.$oid + ".json").
-                success(function(data) {
-                    $scope.posts.splice($scope.posts.indexOf(item), 1);
-                });
+        if ($scope.folders) {
+            for (var i = 0; i < $scope.folders.length; i++) {
+                if ($scope.folders[i]._id.$oid == $routeParams.id) {
+                    $scope.selectedFolder = i;
+                }
             }
-        };
-
-        $scope.createSubTopic = function(formData) {
-            formData.parent_topic = $routeParams.id;
-
-            $http.post("/topics.json", formData).
-            success(function(data) {
-                $('#subTopicModal').foundation('reveal', 'close');
-                $scope.formData = {};
-
-                $scope.subtopics.push(data);
-            });
         }
-    })
-    .controller("TopicsCtrl", function ($scope, $location, $http, $routeParams) {
-        $(document).foundation();
 
-        $http.get("/share/users.json").
-                success(function(data) {
-                    $scope.users = data;
-                });
-
-        $http.get("/folders.json").
-            success(function(data) {
-                $scope.folders = data;
-                
-                this.myFolders = data;
+        if ($scope.topics) {
+            $scope.topics.forEach (function (topic) {
+                if (topic.shared_with_ids) {
+                    i = 0;
+                    topic.shared_with_ids.forEach (function (entry) {
+                        topic.shared_with_ids[i] = entry.$oid;
+                    });
+                }
             });
-        
-        if ($routeParams.id) {
-            $http.get("/folders/" + $routeParams.id + ".json").
-                success(function(data) {
-                    $scope.topics = data;
-
-                    if ($scope.topics) {
-                        $scope.topics.forEach (function (topic) {
-                            if (topic.shared_with_ids) {
-                                i = 0;
-                                topic.shared_with_ids.forEach (function (entry) {
-                                    topic.shared_with_ids[i] = entry.$oid;
-                                });
-                            }
-                        });
-                    }
-                                
-                    if (this.myFolders) {
-                        for (var i = 0; i < this.myFolders.length; i++) {
-                            if (this.myFolders[i]._id.$oid == $routeParams.id) {
-                                $scope.selectedFolder = i;
-                            }
-                        }
-                    }
-                });
-        }            
-        else {
-            $http.get("/topics.json").
-                success(function(data) {
-                    $scope.topics = data;
-
-                    if ($scope.topics) {
-                        $scope.topics.forEach (function (topic) {
-                            if (topic.shared_with_ids) {
-                                i = 0;
-                                topic.shared_with_ids.forEach (function (entry) {
-                                    topic.shared_with_ids[i] = entry.$oid;
-                                });
-                            }
-                        });
-                    }
-                });
         }
 
         $scope.createFolder = function (formData) {
@@ -302,8 +235,98 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation"])
                 $http.delete("/topics/" + item._id.$oid + ".json").
                 success(function(data) {
                     $scope.topics.splice($scope.topics.indexOf(item), 1);
-                    $location.url("/topics")
                 });
             }
         };
+    })
+    .controller("PostsCtrl", function ($scope, $routeParams, $http, folders, subtopics, posts, topicname) {
+        $(document).foundation();
+
+        $scope.posts = posts.data;
+
+        if ($routeParams.id)
+        {
+            $scope.folders = folders.data;
+            $scope.subtopics = subtopics.data;
+            $scope.topicName = topicname.data;
+
+            $scope.hiding = false;
+        }
+        else {
+            $scope.hiding = true;
+        }
+
+        
+        $scope.createPost = function(formData) {
+            formData.topic_id = $routeParams.id;
+
+            $http.post("/posts.json", formData).
+                success(function(data) {
+                    $('#createPostModal').foundation('reveal', 'close');
+                    $scope.formData = {};
+
+                    $scope.posts.unshift(data);
+                });
+        };
+        
+        $scope.preEditPost = function(item) {
+            $scope.formData = item;
+            $('#editPostModal').foundation('reveal', 'open');
+        };
+        
+        $scope.editPost = function(formData) {
+            $http.put("/posts/" + formData._id.$oid + ".json", formData).
+            success(function(data) {
+                $('#editPostModal').foundation('reveal', 'close');
+                $scope.formData = {};
+            });
+        };
+
+        $scope.preMovePost = function(item) {
+            $http.get("/topics.json").
+                success(function(data) {
+                    $scope.topics = data;
+                });
+
+            $scope.formData = item;
+
+            if (item.topic_id) {
+                $scope.formData.topic_id = item.topic_id.$oid;
+            }
+
+            $('#movePostModal').foundation('reveal', 'open');
+        };
+
+        $scope.movePost = function(formData) {
+            $http.put("/posts/" + formData._id.$oid + ".json", formData).
+            success(function(data) {
+                $('#movePostModal').foundation('reveal', 'close');
+                $scope.formData = {};
+
+                $scope.posts.splice($scope.posts.indexOf(formData), 1);
+            });
+        };
+
+        $scope.delPost = function (item) {
+            var toDelete = confirm('Are you absolutely sure you want to delete?');   
+
+            if (toDelete) {
+                $http.delete("/posts/" + item._id.$oid + ".json").
+                success(function(data) {
+                    $scope.posts.splice($scope.posts.indexOf(item), 1);
+                });
+            }
+        };
+
+        $scope.createSubTopic = function(formData) {
+            formData.parent_topic = $routeParams.id;
+
+            $http.post("/topics.json", formData).
+            success(function(data) {
+                $('#subTopicModal').foundation('reveal', 'close');
+                $scope.formData = {};
+
+                $scope.subtopics.push(data);
+            });
+        }
     });

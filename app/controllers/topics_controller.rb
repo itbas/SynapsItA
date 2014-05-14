@@ -6,13 +6,13 @@ class TopicsController < ApplicationController
   # GET /topics
   # GET /topics.json
   def index
-    respond_with current_user.topics.all
+    respond_with current_user ? current_user.topics.all : ""
   end
 
   # GET /topics/1
   # GET /topics/1.json
   def show
-    respond_with @topic.posts
+    respond_with current_user ? @topic.posts : ""
   end
 
   def showsubs

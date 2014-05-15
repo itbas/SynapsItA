@@ -38,6 +38,8 @@ GEM
     arel (4.0.2)
     bcrypt (3.1.7)
     bcrypt (3.1.7-x86-mingw32)
+    bootstrap-sass (3.1.1.0)
+      sass (~> 3.2)
     bson (2.2.2)
     builder (3.1.4)
     coffee-rails (4.0.1)
@@ -148,6 +150,7 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt (~> 3.1.7)
+  bootstrap-sass (~> 3.1.1)
   coffee-rails (~> 4.0.0)
   devise (~> 3.2.4)
   foundation-rails (~> 5.2.2.0)

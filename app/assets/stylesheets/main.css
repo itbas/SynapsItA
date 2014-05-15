@@ -39,6 +39,7 @@ h1, h2 {
 }
 
 ul { list-style:none; }
+ol { list-style:none; }
 
 .postList { -moz-transform:translate(-15px, 0px); -moz-box-shadow:0px 0px 15px #0066CC;
                -webkit-transform:translate(-15px, 0px); -webkit-box-shadow:0px 0px 15px #0066CC;
@@ -50,3 +51,39 @@ ul { list-style:none; }
 #topicList a:hover { -moz-transform:rotate(0deg); -moz-box-shadow:10px 10px 20px #0066CC;
                        -webkit-transform:rotate(0deg); -webkit-box-shadow:10px 10px 20px #0066CC;
                         transform:rotate(0deg); box-shadow:10px 10px 20px #0066CC; }
+
+
+
+
+.btn {
+    margin-right: 5px;
+}
+
+.topic-title a {
+    color: white;
+}
+
+.post-title {
+    color: white;
+}
+
+.angular-ui-tree-handle {
+    background: #1E2B34;
+    border: 1px solid #0D161F;
+    padding: 10px 10px;
+}
+
+.angular-ui-tree-handle:hover {
+    color: #438eb9;
+    background: #2B445A;
+    border-color: #dce2e8;
+}
+
+code {
+  background: #0C0C0C;
+  color: #7C9EB2;
+}
+
+select {
+  color:black;
+}

@@ -6,7 +6,7 @@ class TopicsController < ApplicationController
   # GET /topics
   # GET /topics.json
   def index
-    respond_with current_user ? current_user.topics.all : ""
+    respond_with current_user ? current_user.topics.all.to_json(:include => [:posts, :owner]) : ""
   end
 
   # GET /topics/1

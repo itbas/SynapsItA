@@ -31,6 +31,7 @@ gem 'rails_12factor', group: :production
 gem 'mongoid', git: 'https://github.com/mongoid/mongoid.git'
 
 gem 'foundation-rails', '~> 5.2.2.0'
+gem 'bootstrap-sass', '~> 3.1.1'
 
 gem 'bcrypt', '~> 3.1.7'
 gem 'devise', '~> 3.2.4'

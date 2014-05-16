@@ -25,10 +25,14 @@
         <section class="top-bar-section">
           <ul class="left">
             <% if user_signed_in? %>
-              <li><a href="/#/topics">My Topics</a></li>
-              <li><a href="/#/posts">My Posts</a></li>
-              <li class="divider"></li>
-              <li><a href="/#/shares">Shared with me</a></li>
+              <li><a href="/#/topics">Overview</a></li>
+              <li class="has-dropdown">
+                <a>Views</a>
+                <ul class="dropdown">
+                  <li><a href="/#/posts">My Posts</a></li>
+                  <li><a href="/#/shares">Shared with me</a></li>
+                </ul>
+              </li>
             <% end %>
           </ul>
           <ul class="right">

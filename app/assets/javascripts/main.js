@@ -312,6 +312,20 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation", "ui.tree"])
                 $scope.formData = {};
             });
         };
+
+        var getRootNodesScope = function() {
+          return angular.element(document.getElementById("tree-root")).scope();
+        };
+
+        $scope.collapseAll = function() {
+          var scope = getRootNodesScope();
+          scope.collapseAll();
+        };
+
+        $scope.expandAll = function() {
+          var scope = getRootNodesScope();
+          scope.expandAll();
+        };
     })
     .controller("PostsCtrl", function ($scope, $routeParams, $http, folders, subtopics, posts, topicname) {
         $(document).foundation();

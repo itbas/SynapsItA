@@ -59,16 +59,19 @@ ol { list-style:none; }
     margin-right: 5px;
 }
 
+.topic-title {
+    background: #1E2B34;
+}
 .topic-title a {
     color: white;
 }
 
 .post-title {
-    color: white;
+    color: #9EDDFF;
+    background: #162B3E;
 }
 
 .angular-ui-tree-handle {
-    background: #1E2B34;
     border: 1px solid #0D161F;
     padding: 10px 10px;
 }
@@ -76,12 +79,13 @@ ol { list-style:none; }
 .angular-ui-tree-handle:hover {
     color: #438eb9;
     background: #2B445A;
-    border-color: #dce2e8;
+    border-color: #DCE2F8;
 }
 
 pre {
   background: #0C0C0C;
   color: #7C9EB2;
+  border-color: #0D161F;
   white-space: pre-wrap; /* css-3 */
   white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
   white-space: -pre-wrap; /* Opera 4-6 */

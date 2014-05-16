@@ -20,11 +20,11 @@ class PostsController < ApplicationController
 
           unless page.nil?
             unless params[:insertTitle].nil?
-              @post.description = page.at_css("title").text
+              @post.description = page.at_css("title").text unless page.at_css("title").nil?
             end
 
-            unless params[:insertMeta].nil?
-              @post.linked_metas = page.css("body h1").text.split(" ") << page.css("body p").text.split(" ").uniq
+            unless params[:insertMeta].nil? && page.css("body h1").nil? && page.css("body p").nil?
+              @post.linked_metas = page.css("body h1").text.split(" ").uniq << page.css("body p").text.split(" ").uniq
             end
           end
         end

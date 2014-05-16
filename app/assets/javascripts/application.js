@@ -24,6 +24,8 @@
 $(function() {
 	$(document).foundation();
 	$(document).on("click", ".top-bar-section li", function () {
-     Foundation.libs.topbar.toggle($('.top-bar'));
+		if (this.id == "") {
+    	Foundation.libs.topbar.toggle($('.top-bar'));
+    }
  	});
 });

@@ -59,6 +59,11 @@ ol { list-style:none; }
     margin-right: 5px;
 }
 
+.topic-header {
+  padding: 10px;
+  background: #1E2B34;
+}
+
 .topic-title {
     background: #1E2B34;
 }

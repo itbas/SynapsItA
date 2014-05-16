@@ -12,7 +12,7 @@ class FoldersController < ApplicationController
   # GET /folders/1
   # GET /folders/1.json
   def show
-    respond_with current_user ? @folder.topics : ""
+    respond_with current_user ? @folder.topics.all.to_json(:include => [:posts, :owner]) : ""
   end
 
   # POST /folders

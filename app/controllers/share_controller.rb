@@ -4,7 +4,7 @@ class ShareController < ApplicationController
   respond_to :json
 
   def list
-  	respond_with current_user ? current_user.share.all : ""
+  	respond_with current_user ? current_user.share.all.to_json(:include => [:posts, :owner]) : ""
   end
 
   def users

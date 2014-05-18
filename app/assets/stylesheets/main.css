@@ -21,14 +21,7 @@ h1, h2 {
 .text-area {
   height:100px;
 }
-
-.dark {
-  color:#080808;
-}
-
-.post-list {
-  background:#0F0F0F;
-}
+/*
 .post-list.ng-enter {
   -webkit-transition:1.5s linear all;
   transition:1.5s linear all;
@@ -37,10 +30,11 @@ h1, h2 {
 .post-list.ng-enter-active {
   background-color: #0F0F0F;
 }
-
+*/
 ul { list-style:none; }
 ol { list-style:none; }
 
+/*
 .postList { -moz-transform:translate(-15px, 0px); -moz-box-shadow:0px 0px 15px #0066CC;
                -webkit-transform:translate(-15px, 0px); -webkit-box-shadow:0px 0px 15px #0066CC;
                 transform:translate(-15px, 0px); box-shadow:0px 0px 15px #0066CC; }
@@ -51,9 +45,7 @@ ol { list-style:none; }
 #topicList a:hover { -moz-transform:rotate(0deg); -moz-box-shadow:10px 10px 20px #0066CC;
                        -webkit-transform:rotate(0deg); -webkit-box-shadow:10px 10px 20px #0066CC;
                         transform:rotate(0deg); box-shadow:10px 10px 20px #0066CC; }
-
-
-
+*/
 
 .btn {
     margin-right: 5px;
@@ -71,22 +63,32 @@ ol { list-style:none; }
     color: white;
 }
 
+.post-header {
+  padding: 10px;
+  background: #162B3E;
+}
 .post-title {
     color: #9EDDFF;
     background: #162B3E;
+}
+
+.post-list {
+  background:#162B3E;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .angular-ui-tree-handle {
     border: 1px solid #0D161F;
     padding: 10px 10px;
 }
-
+/*
 .angular-ui-tree-handle:hover {
     color: #438eb9;
     background: #2B445A;
     border-color: #DCE2F8;
 }
-
+*/
 pre {
   background: #0C0C0C;
   color: #7C9EB2;

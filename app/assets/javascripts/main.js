@@ -81,14 +81,33 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation", "ui.tree"])
     }])
     .filter("createHyperlinks", function ($sce) {
         return function (str) {
-            return $sce.trustAsHtml(str.
-                                    replace(/ /g, '&nbsp;').
-                                    replace(/(http[^\s]+)/g, '<a href="$1" target="_blank">$1</a>').
-                                    replace(/(file:[^\s]+)/g, '<a href="$1" target="_blank">$1</a>').
-                                    replace(/\n/g, '<br>')
-//                                    replace(/</g, '&lt;').
-//                                    replace(/>/g, '&gt;').
-                                   );
+            var strStr = str;
+
+            if (str.lastIndexOf(".jpg") > 0 || str.lastIndexOf(".gif") > 0 || str.lastIndexOf(".png") > 0) {
+                retStr = $sce.trustAsHtml(str.
+                                            replace(/(http[^\s]+)/g, '<a href="$1" target="_blank"><img src="$1" height="320" width="240"></a>')
+                                         );
+            }
+            else if (str.indexOf(".youtube.") > 0) {
+                if (str.indexOf("&") > 0) {
+                    str = str.substring(0, str.indexOf("&"));
+                }
+
+                retStr = $sce.trustAsHtml(str.
+                                            replace("watch?v=", "embed/").
+                                            replace(/(http[^\s]+)/g, '<div class="flex-video"><iframe width="320" height="240" src="$1" frameborder="0" allowfullscreen></iframe></div>')
+                                         );
+            }
+            else {
+                retStr = $sce.trustAsHtml(str.
+                                            replace(/ /g, '&nbsp;').
+                                            replace(/(http[^\s]+)/g, '<a href="$1" target="_blank">$1</a>').
+                                            replace(/(file:[^\s]+)/g, '<a href="$1" target="_blank">$1</a>').
+                                            replace(/\n/g, '<br>')
+                                         );
+            }
+
+            return retStr;
         }
     })
     .controller("IndexCtrl", function ($scope) {
@@ -183,7 +202,9 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation", "ui.tree"])
         $scope.createTopic = function (formData) {
             $http.post("/topics.json", formData).
             success(function(data) {
+                $('#createTopicModal').foundation('reveal', 'close');
                 $scope.formData = {};
+                
                 $scope.topics.push(data);
             });
         };

@@ -94,6 +94,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation", "ui.tree"])
                 }
 
                 retStr = $sce.trustAsHtml(str.
+                                            replace("m.youtube.", "www.youtube.").
                                             replace("watch?v=", "embed/").
                                             replace(/(http[^\s]+)/g, '<div class="flex-video"><iframe width="320" height="240" src="$1" frameborder="0" allowfullscreen></iframe></div>')
                                          );
@@ -118,13 +119,96 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation", "ui.tree"])
 
         $scope.isShared = true;
 
+        $http.get("/share/current_user.json").
+            success(function(data) {
+                $scope.currentUser = data;
+            });
+
         $http.get("/share/list.json").
             success(function(data) {
                 $scope.topics = data;
+                console.log($scope.topics);
             });
-
+/*
         $scope.viewTopic = function (id) {
             $location.url("/topics/" + id)
+        };
+*/
+        $scope.preCreatePost = function(post) {
+            $scope.formData = {};
+            $scope.formData.topic_id = post._id.$oid;
+            $('#createPostModal').foundation('reveal', 'open');
+        }
+
+        $scope.createPost = function(formData) {
+            $http.post("/posts.json", formData).
+                success(function(data) {
+                    $('#createPostModal').foundation('reveal', 'close');
+
+                    $scope.topics.forEach (function (topic) {
+                        if (topic._id.$oid == formData.topic_id) {
+                            topic.posts.unshift(data);
+                        }
+                    })
+
+                    $scope.formData = {};
+                });
+        };
+
+        $scope.delPost = function (topic, post) {
+            var toDelete = confirm('Are you absolutely sure you want to delete?');   
+
+            if (toDelete) {
+                $http.delete("/posts/" + post._id.$oid + ".json").
+                success(function(data) {
+                    topic.posts.splice(topic.posts.indexOf(post), 1);
+                });
+            }
+        };
+
+        $scope.preEditPost = function(post) {
+            $scope.formData = post;
+            $('#editPostModal').foundation('reveal', 'open');
+        };
+        
+        $scope.editPost = function(formData) {
+            $http.put("/posts/" + formData._id.$oid + ".json", formData).
+            success(function(data) {
+                $('#editPostModal').foundation('reveal', 'close');
+                $scope.formData = {};
+            });
+        };
+
+        $scope.preMovePost = function(post) {
+/*
+            $http.get("/topics.json").
+                success(function(data) {
+                    $scope.topics = data;
+                });
+*/
+            $scope.formData = post;
+            $scope.formData.topic_id = post.topic_id.$oid;
+
+            $('#movePostModal').foundation('reveal', 'open');
+        };
+
+        $scope.movePost = function(formData) {
+            $http.put("/posts/" + formData._id.$oid + ".json", formData).
+            success(function(data) {
+                $('#movePostModal').foundation('reveal', 'close');
+
+                $scope.topics.forEach (function (topic) {
+                    if (topic.posts.indexOf(formData) == 0) {
+                        topic.posts.splice(topic.posts.indexOf(formData), 1);
+                    }
+
+                    if (topic._id.$oid == formData.topic_id) {
+                        topic.posts.unshift(formData);
+                    }
+                })
+
+                $scope.formData = {};
+            });
         };
     })
     .controller("FoldersCtrl", function ($scope, $http) {

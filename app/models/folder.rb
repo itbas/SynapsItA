@@ -1,8 +1,9 @@
 class Folder
   include Mongoid::Document
+  include Mongoid::Timestamps
+
   field :name, type: String
-  field :description, type: String
-  field :created_at , type: DateTime, default: Time.zone.now
+  field :description, type: String  
   
   has_many :topics
   

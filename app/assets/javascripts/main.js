@@ -23,18 +23,8 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation", "ui.tree"])
             }).
             when("/topics", {templateUrl: '/assets/views/topics.html', controller: 'TopicsCtrl',
                 resolve: {
-                    users: function($http) {
-                        return $http.get("/share/users.json").success(function(data) {
-                            return data;
-                        });
-                    },
                     folders: function($http) {
                         return $http.get("/folders.json").success(function(data) {
-                            return data;
-                        });
-                    },
-                    topics: function($http) {
-                        return $http.get("/topics.json").success(function(data) {
                             return data;
                         });
                     }
@@ -159,12 +149,29 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation", "ui.tree"])
             }
         };
     })
-    .controller("TopicsCtrl", function ($scope, $location, $http, $routeParams, users, folders, topics) {
+    .controller("TopicsCtrl", function ($scope, $location, $http, $routeParams, folders) {
         $(document).foundation();
 
-        $scope.users = users.data;
         $scope.folders = folders.data;
-        $scope.topics = topics.data;
+
+        $http.get("/share/users.json").success(function(data) {
+            $scope.users = data;
+        });
+
+        $http.get("/topics.json").success(function(data) {
+            $scope.topics = data;
+
+            if ($scope.topics) {
+                $scope.topics.forEach (function (topic) {
+                    if (topic.shared_with_ids) {
+                        i = 0;
+                        topic.shared_with_ids.forEach (function (entry) {
+                            topic.shared_with_ids[i] = entry.$oid;
+                        });
+                    }
+                });
+            }
+        });
 
         if ($scope.folders) {
             for (var i = 0; i < $scope.folders.length; i++) {
@@ -172,18 +179,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation", "ui.tree"])
                     $scope.selectedFolder = i;
                 }
             }
-        }
-
-        if ($scope.topics) {
-            $scope.topics.forEach (function (topic) {
-                if (topic.shared_with_ids) {
-                    i = 0;
-                    topic.shared_with_ids.forEach (function (entry) {
-                        topic.shared_with_ids[i] = entry.$oid;
-                    });
-                }
-            });
-        }
+        }        
 
         $scope.createFolder = function (formData) {
             $http.post("/folders.json", formData).
@@ -204,7 +200,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation", "ui.tree"])
             success(function(data) {
                 $('#createTopicModal').foundation('reveal', 'close');
                 $scope.formData = {};
-                
+
                 $scope.topics.push(data);
             });
         };

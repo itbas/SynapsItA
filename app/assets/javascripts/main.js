@@ -116,8 +116,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation", "ui.tree"])
 
         $http.get("/share/list.json").
             success(function(data) {
-                $scope.topics = data;
-                console.log($scope.topics);
+                $scope.topics = data;                
             });
 /*
         $scope.viewTopic = function (id) {

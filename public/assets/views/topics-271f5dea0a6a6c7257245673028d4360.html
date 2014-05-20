@@ -1,0 +1,158 @@
+<div>
+  <div id="folderModal" class="reveal-modal" data-reveal>
+    <h3>Add Folder</h3>
+    <form>
+      <input type="text" placeholder="Folder name" ng-model="formData.name" required>    
+      <a ng-click="createFolder(formData)" class="button">Submit</a>
+    </form>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+
+  <div id="createTopicModal" class="reveal-modal" data-reveal>
+    <h3>Add Topic</h3>
+    <form>
+      <input type="text" placeholder="Topic name" ng-model="formData.name" required>
+      <select ng-model="formData.folder_id" ng-options="folder._id.$oid as folder.name for folder in folders"></select>
+      <textarea placeholder="Description" ng-model="formData.description"></textarea>
+
+      <a ng-click="createTopic(formData)" class="button">Submit</a>
+    </form>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+  
+  <div id="editTopicModal" class="reveal-modal" data-reveal>
+    <h3>Edit Topic</h3>
+    <form>
+      <input type="text" placeholder="Topic name" ng-model="formData.name" required>
+      <select ng-model="formData.folder_id" ng-options="folder._id.$oid as folder.name for folder in folders"></select>
+      <textarea placeholder="Description" ng-model="formData.description"></textarea>
+
+      <a ng-click="editTopic(formData)" class="button">Submit</a>
+    </form>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+
+  <div id="shareTopicModal" class="reveal-modal" data-reveal>
+    <h3>
+      Share Topic
+      <a ng-click="formData.shared_with_ids = []" class="tiny button">Unshare</a>
+    </h3>
+    <form>
+      <select size="5" class="text-area" multiple ng-multiple="true" ng-model="formData.shared_with_ids" ng-options="user._id.$oid as user.email for user in users"></select>
+      <a ng-click="shareTopic(formData)" class="button">Submit</a>
+    </form>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+
+  <div id="createPostModal" class="reveal-modal" data-reveal>
+    <h3>Add Post</h3>
+    <form>
+      <textarea class="text-area" placeholder="Content" ng-model="formData.content" required></textarea>
+      <input type="checkbox" ng-model="formData.insertTitle">&nbsp;<label>Retrieve link-URL title as post title</label><br>
+      <input type="checkbox" ng-model="formData.insertMeta">&nbsp;<label>Retrieve link-URL meta data for Filtering</label><br>
+      <a ng-click="createPost(formData)" class="button">Submit</a>
+    </form>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+  
+  <div id="editPostModal" class="reveal-modal" data-reveal>
+    <h3>Edit Post</h3>
+    <form>
+      <input type="text" placeholder="Title" ng-model="formData.description">
+      <textarea class="text-area" placeholder="Content" ng-model="formData.content" required></textarea>
+      <a ng-click="editPost(formData)" class="button">Submit</a>
+    </form>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+
+  <div id="movePostModal" class="reveal-modal" data-reveal>
+    <h3>Move Post</h3>
+    <form>
+      <select ng-model="formData.topic_id" ng-options="topic._id.$oid as topic.name for topic in topics"></select>
+      <a ng-click="movePost(formData)" class="button">Submit</a>
+    </form>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+
+  <hr ng-hide="isShared"/>
+
+  <dl class="sub-nav" ng-hide="isShared">
+    <dt>Folders:</dt>
+    <dd class="active"><a data-reveal-id="folderModal">Add</a></dd>
+    <dd ng-repeat="folder in folders" ng-class="{active: $index == selectedFolder}">
+        <a href="/#/folders/{{folder._id.$oid}}">{{folder.name}}</a>
+    </dd>
+    <dd class="active"><a href="/#/topics">All</a></dd>
+    <dd class="active"><a href="/#/folders">Manage</a></dd>
+  </dl>
+
+  <hr ng-hide="isShared"/>
+
+  <div class="topic-header">
+    <h2>
+      <span ng-show="isShared">SHARED&nbsp;</span>TOPICS
+      <a class="btn btn-default pull-right" ng-click="collapseAll()">Collapse all</a>
+      <a class="btn btn-default pull-right" ng-click="expandAll()">Expand all</a>
+      <a ng-hide="isShared" class="btn btn-success pull-right" data-reveal-id="createTopicModal"><i class="glyphicon glyphicon-plus"></i></a>
+    </h2>
+
+    <div class="row">
+      <div class="small-10 columns">
+        <div class="row">
+          <div class="small-10 columns">
+            <input type="text" ng-model="topicFilter" placeholder="Filter all...">
+          </div>
+          <div class="small-2 columns">
+            <a class="button alert" style="height:40px" ng-click="topicFilter = ''"><i class="glyphicon glyphicon-remove"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div ui-tree id="tree-root" data-drag-enabled="false">
+    <ol ui-tree-nodes ng-model="topics" data-type="topic">
+      <li ng-repeat="topic in topics | filter:topicFilter | orderBy: 'name'" ui-tree-node>
+        <div class="topic-title angular-ui-tree-handle">
+          <a ng-hide="isShared" class="btn btn-danger btn-xs pull-right" ng-click="delTopic(topic)"><i class="glyphicon glyphicon-remove"></i></a>
+          <a ng-hide="isShared" class="btn btn-primary btn-xs pull-right" ng-click="preShareTopic(topic)"><i class="glyphicon glyphicon-share"></i></a>
+          <a ng-hide="isShared" class="btn btn-primary btn-xs pull-right" ng-click="preEditTopic(topic)"><i class="glyphicon glyphicon-pencil"></i></a>
+          <a class="btn btn-success btn-xs pull-right" ng-click="preCreatePost(topic)"><i class="glyphicon glyphicon-plus"></i></a>
+
+          <a class="btn btn-success btn-xs" ng-click="toggle(this)">
+            <span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span>
+          </a>
+          <a ng-click="viewTopic(topic._id.$oid)">
+            <strong>{{topic.name}}</strong>
+            <small ng-hide="isShared || topic.shared_with_ids.length == 0">Shared with {{topic.shared_with_ids.length}}</small> 
+            <small ng-show="isShared">{{topic.owner.email}}</small>            
+          </a>
+          <p>{{topic.description}}</p>
+        </div>
+
+        <ol ui-tree-nodes ng-model="topic.posts" data-type="post" ng-class="{hidden: collapsed}">
+          <li ng-repeat="post in topic.posts | filter:topicFilter | orderBy: '-created_at'" ui-tree-node>
+            <div class="post-title angular-ui-tree-handle">
+              <div ng-switch on="isShared">
+                <div ng-switch-when="true">
+                  <a ng-show="post.owner_id.$oid == currentUser._id.$oid" class="btn btn-danger btn-xs pull-right" ng-click="delPost(topic, post)"><i class="glyphicon glyphicon-remove"></i></a>
+                  <a ng-show="post.owner_id.$oid == currentUser._id.$oid" class="btn btn-primary btn-xs pull-right" ng-click="preEditPost(post)"><i class="glyphicon glyphicon-pencil"></i></a>
+                  <a ng-show="post.owner_id.$oid == currentUser._id.$oid" class="btn btn-primary btn-xs pull-right" ng-click="preMovePost(post)"><i class="glyphicon glyphicon-share-alt"></i></a>
+                </div>
+                <div ng-switch-default>
+                  <a class="btn btn-danger btn-xs pull-right" ng-click="delPost(topic, post)"><i class="glyphicon glyphicon-remove"></i></a>
+                  <a class="btn btn-primary btn-xs pull-right" ng-click="preEditPost(post)"><i class="glyphicon glyphicon-pencil"></i></a>
+                  <a class="btn btn-primary btn-xs pull-right" ng-click="preMovePost(post)"><i class="glyphicon glyphicon-share-alt"></i></a>
+                </div>
+              </div>
+
+              <small>{{post.created_at | date:'yyyy-MM-dd  HH:mm:ss'}}</small>
+              <p>{{post.description}}</p>
+              <pre ng-bind-html="post.content | createHyperlinks"></pre>
+            </div>
+          </li>
+        </ol>
+      </li>
+    </ol>
+  </div>
+</div>

@@ -5,6 +5,7 @@ AngularFoundation::Application.routes.draw do
 
   get "share/list" => "share#list"
   get "share/users" => "share#users"
+  get "share/current_user" => "share#curr_user"
   put "share/save/:id" => "share#save"
 
   get "search/topics/:str" => "search#topics"

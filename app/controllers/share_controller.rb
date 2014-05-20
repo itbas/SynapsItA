@@ -11,6 +11,10 @@ class ShareController < ApplicationController
   	respond_with User.all
   end
 
+  def curr_user
+  	respond_with current_user
+  end
+
   def save
   	User.all.each do |user|
       user.share.delete(@topic)

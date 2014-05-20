@@ -13,12 +13,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation", "ui.tree"])
                         return $http.get("/folders.json").success(function(data) {
                             return data;
                         });
-                    },
-                    topics: function($http, $route) {
-                        return $http.get("/folders/" + $route.current.params.id + ".json").success(function(data) {
-                            return data;
-                        });
-                    }
+                    }                    
                 }
             }).
             when("/topics", {templateUrl: '/assets/views/topics.html', controller: 'TopicsCtrl',
@@ -241,9 +236,18 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation", "ui.tree"])
             $scope.users = data;
         });
 
-        $http.get("/topics.json").success(function(data) {
-            $scope.topics = data;
+        if ($routeParams.id) {
+            $http.get("/folders/" + $routeParams.id + ".json").success(function(data) {
+                $scope.topics = data;
+            });
+        }
+        else {
+            $http.get("/topics.json").success(function(data) {
+                $scope.topics = data;
+            });
+        }
 
+        $scope.$watch("topics", function() {
             if ($scope.topics) {
                 $scope.topics.forEach (function (topic) {
                     if (topic.shared_with_ids) {
@@ -254,7 +258,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation", "ui.tree"])
                     }
                 });
             }
-        });
+       });
 
         if ($scope.folders) {
             for (var i = 0; i < $scope.folders.length; i++) {

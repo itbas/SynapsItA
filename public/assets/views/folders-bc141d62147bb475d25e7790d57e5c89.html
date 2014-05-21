@@ -1,0 +1,20 @@
+<div>
+  <div id="editFolderModal" class="reveal-modal" data-reveal>
+    <h3>Edit Folder</h3>
+    <form>
+      <input type="text" placeholder="Folder name" ng-model="formData.name" required>    
+      <a ng-click="editFolder(formData)" class="btn btn-success">Submit</a>
+    </form>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+
+  <h2>Folders</h2>
+  <hr/>
+  <ul>
+    <li ng-repeat="folder in folders">
+      <a href="/#/folders/{{folder._id.$oid}}">{{folder.name}}</a>
+      <a class="btn btn-danger btn-xs pull-right" ng-click="delFolder(folder)"><i class="glyphicon glyphicon-remove"></i></a>
+      <a class="btn btn-primary btn-xs pull-right" ng-click="preEditFolder(folder)"><i class="glyphicon glyphicon-pencil"></i></a>
+    </li>      
+  </ul>
+</div>

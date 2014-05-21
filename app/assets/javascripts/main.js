@@ -396,22 +396,26 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation", "ui.tree"])
                 });
 */
             $scope.formData = post;
-            $scope.formData.topic_id = post.topic_id.$oid;
-
             $('#movePostModal').foundation('reveal', 'open');
         };
 
         $scope.movePost = function(formData) {
+            formData.topic_id = formData.topic_id.$oid;
+
             $http.put("/posts/" + formData._id.$oid + ".json", formData).
             success(function(data) {
                 $('#movePostModal').foundation('reveal', 'close');
 
                 $scope.topics.forEach (function (topic) {
-                    if (topic.posts.indexOf(formData) == 0) {
+                    if (topic.posts && topic.posts.indexOf(formData) == 0) {
                         topic.posts.splice(topic.posts.indexOf(formData), 1);
                     }
 
                     if (topic._id.$oid == formData.topic_id) {
+                        if (topic.posts == null) {
+                            topic.posts = [];
+                        }
+
                         topic.posts.unshift(formData);
                     }
                 })

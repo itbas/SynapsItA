@@ -1,0 +1,86 @@
+<div>
+  <div id="createPostModal" class="reveal-modal" data-reveal>
+    <h3>Add Post</h3>
+    <form>
+      <textarea class="text-area" placeholder="Content" ng-model="formData.content" required></textarea>
+      <input type="checkbox" ng-model="formData.insertTitle">&nbsp;<label>Retrieve link-URL title as post title</label><br>
+      <input type="checkbox" ng-model="formData.insertMeta">&nbsp;<label>Retrieve link-URL meta data for Filtering</label><br>
+      <a ng-click="createPost(formData)" class="btn btn-success">Submit</a>
+    </form>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+  
+  <div id="editPostModal" class="reveal-modal" data-reveal>
+    <h3>Edit Post</h3>
+    <form>
+      <input type="text" placeholder="Title" ng-model="formData.description">
+      <textarea class="text-area" placeholder="Content" ng-model="formData.content" required></textarea>
+      <a ng-click="editPost(formData)" class="btn btn-success">Submit</a>
+    </form>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+
+  <div id="subTopicModal" class="reveal-modal" data-reveal>
+    <h3>Add Topic</h3>
+    <form>
+      <input type="text" placeholder="Topic name" ng-model="formData.name" required>
+      <select ng-model="formData.folder_id" ng-options="folder._id.$oid as folder.name for folder in folders"></select>
+      <textarea placeholder="Description" ng-model="formData.description"></textarea>
+
+      <a ng-click="createSubTopic(formData)" class="btn btn-success">Submit</a>
+    </form>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+
+  <div id="movePostModal" class="reveal-modal" data-reveal>
+    <h3>Move Post</h3>
+    <form>
+      <select ng-model="formData.topic_id" ng-options="topic._id.$oid as topic.name for topic in topics"></select>
+      <a ng-click="movePost(formData)" class="btn btn-success">Submit</a>
+    </form>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+
+  <div ng-hide="hiding">
+    <hr/>
+    <dl class="sub-nav">
+      <dt>Sub-Topics:</dt>
+      <dd class="active"><a data-reveal-id="subTopicModal">Add</a></dd>
+      <dd ng-repeat="subtopic in subtopics">
+        <a href="/#/topics/{{subtopic._id.$oid}}">{{subtopic.name}}</a>
+      </dd>
+    </dl>
+    <hr/>
+  </div>
+
+  <div class="post-header">
+    <h2>
+      <div ng-show="hiding">My Posts</div>
+      <div ng-hide="hiding">
+        <span>{{topicName}}</span>
+        <a class="btn btn-default pull-right" onclick="history.back();">Back</a>
+        <a class="btn btn-success pull-right" data-reveal-id="createPostModal"><i class="glyphicon glyphicon-plus"></i></a>
+      </div>
+    </h2>
+
+    <div class="input-group" style="width:340px">
+      <input type="text" class="form-control" ng-model="postFilter" placeholder="Filter posts...">
+      <span class="input-group-addon btn" ng-click="postFilter = ''"><i class="glyphicon glyphicon-remove"></i></span>
+    </div>
+  </div>
+
+  <div>
+    <ul>
+      <li class="post-list" ng-repeat="post in posts | filter:postFilter | orderBy: '-created_at'">
+        <a class="btn btn-danger btn-xs pull-right" ng-click="delPost(post)"><i class="glyphicon glyphicon-remove"></i></a>
+        <a class="btn btn-primary btn-xs pull-right" ng-click="preEditPost(post)"><i class="glyphicon glyphicon-pencil"></i></a>
+        <a class="btn btn-primary btn-xs pull-right" ng-click="preMovePost(post)"><i class="glyphicon glyphicon-share-alt"></i></a>
+        
+        <small>{{post.created_at | date:'yyyy-MM-dd  HH:mm:ss'}}</small>
+        <p>{{post.description}}</p>
+        <pre ng-bind-html="post.content | createHyperlinks"></pre>
+      </li>
+    </ul>
+  </div>
+</div>
+

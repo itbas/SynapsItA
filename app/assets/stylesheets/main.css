@@ -18,6 +18,11 @@ h1, h2 {
   color:#E8E8E8;
 }
 
+.loading {
+  width:148px;
+  height:148px;
+}
+
 .text-area {
   height:100px;
 }

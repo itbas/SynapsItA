@@ -231,6 +231,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation", "ui.tree"])
         $(document).foundation();
 
         $scope.folders = folders.data;
+        $scope.isLoading = true;
 
         $http.get("/share/users.json").success(function(data) {
             $scope.users = data;
@@ -257,6 +258,8 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation", "ui.tree"])
                         });
                     }
                 });
+                
+                $scope.isLoading = false;
             }
        });
 

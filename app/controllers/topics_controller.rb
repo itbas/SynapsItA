@@ -1,18 +1,18 @@
 class TopicsController < ApplicationController
+  before_filter :authenticate_user!
   before_action :set_topic, only: [:show, :showsubs, :name, :update, :destroy]
-  skip_before_action :verify_authenticity_token
   respond_to :json
 
   # GET /topics
   # GET /topics.json
   def index
-    respond_with current_user ? current_user.topics.all.to_json(:include => [:posts, :owner]) : ""
+    respond_with current_user.topics.all.to_json(:include => [:posts, :owner])
   end
 
   # GET /topics/1
   # GET /topics/1.json
   def show
-    respond_with current_user ? @topic.posts : ""
+    respond_with @topic.posts
   end
 
   def showsubs

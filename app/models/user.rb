@@ -27,8 +27,8 @@ class User
   has_many :topics, inverse_of: :owner, dependent: :delete
   has_many :posts, dependent: :delete
 
-  embeds_many :msg_in, class_name: "Message", inverse_of: :from_user
-  embeds_many :msg_out, class_name: "Message", inverse_of: :to_user
+  has_many :inbox, class_name: "Message", inverse_of: :from_user
+  has_many :outbox, class_name: "Message", inverse_of: :to_user
 
   has_and_belongs_to_many :share, class_name: "Topic", inverse_of: :shared_with
 

@@ -1,14 +1,14 @@
 class MessagesController < ApplicationController
+  before_filter :authenticate_user!
 	before_action :set_msg, only: [:destroy]
-  skip_before_action :verify_authenticity_token
   respond_to :json
 
   def msg_in
-    respond_with current_user.msg_from.all
+    respond_with current_user.inbox.all
   end
 
   def msg_out
-    respond_with current_user.msg_to.all
+    respond_with current_user.outbox.all
   end
   
   def create
@@ -18,7 +18,7 @@ class MessagesController < ApplicationController
   end
   
   def destroy
-    respond_with @msg_from.destroy
+    respond_with @msg.destroy
   end
   
   private

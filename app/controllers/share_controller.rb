@@ -1,10 +1,10 @@
 class ShareController < ApplicationController
+  before_filter :authenticate_user!
 	before_action :set_topic, only: [:save]
-	skip_before_action :verify_authenticity_token
   respond_to :json
 
   def list
-  	respond_with current_user ? current_user.share.all.to_json(:include => [:posts, :owner]) : ""
+  	respond_with current_user.share.all.to_json(:include => [:posts, :owner])
   end
 
   def users
@@ -27,6 +27,9 @@ class ShareController < ApplicationController
 
         @topic.shared_with.push(user)
         user.share.push(@topic)
+
+        msg = "#{current_user.email} shared '#{@topic.name}' with you!"
+        user.inbox.push(Message.new(type: "_share", content: msg ))
       end
     end
 

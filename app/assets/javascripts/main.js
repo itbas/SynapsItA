@@ -1,5 +1,27 @@
 angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation", "ui.tree"])
-    .config(["$routeProvider", function ($routeProvider) {
+    .config(["$routeProvider", "$httpProvider", function ($routeProvider, $httpProvider) {
+        $httpProvider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
+
+        var interceptor = ["$window", "$rootScope", "$q", function($window, $rootScope, $q) {
+            function success(response) {
+                return response
+            };
+
+            function error(response) {
+                if (response.status == 401) {
+//                  $rootScope.$broadcast('event:unauthorized');
+                    $window.location.href = "/users/sign_in";
+                    return response;
+                };
+                return $q.reject(response);
+            };
+
+            return function(promise) {
+                return promise.then(success, error);
+            };
+        }];
+        $httpProvider.responseInterceptors.push(interceptor);
+
         $routeProvider.
             when("/folders", {templateUrl: '/assets/views/folders.html', controller: 'FoldersCtrl'}).
             when("/folders/:id", {templateUrl: '/assets/views/topics.html', controller: 'TopicsCtrl',
@@ -64,6 +86,31 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation", "ui.tree"])
             when("/shares", {templateUrl: '/assets/views/topics.html', controller: 'SharesCtrl'}).
             otherwise({ templateUrl: '/assets/views/home.html', controller: 'IndexCtrl'});
     }])
+    .service("flash", function($rootScope, $http) {
+        var msgQueue = [];
+
+        $rootScope.$on("$routeChangeSuccess", function() {
+            $http.get("/messages/in.json").success(function(data) {
+                msgQueue = data;
+            });
+        });
+
+        return {
+            isMessage: function() {
+                return msgQueue.length
+            },
+            getMessage: function() {
+                console.log("msgQueue: " + msgQueue);
+                return msgQueue;
+            },
+            delMessage: function(msg) {
+                console.log("msg: " + msg);
+                $http.delete("/messages/" + msg._id.$oid + ".json");
+
+                msgQueue.splice(msgQueue.indexOf(msg), 1);
+            }
+        };
+    })
     .filter("createHyperlinks", function ($sce) {
         return function (str) {
             var strStr = str;
@@ -96,10 +143,11 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation", "ui.tree"])
             return retStr;
         }
     })
-    .controller("IndexCtrl", function ($scope) {
+    .controller("IndexCtrl", function ($scope, flash) {
         $scope.title = "SynapsIt";
+        $scope.flash = flash;
     })
-    .controller("SharesCtrl", function ($scope, $http, $location) {
+    .controller("SharesCtrl", function ($scope, $http, $location, flash) {
         $(document).foundation();
 
         $scope.isShared = true;
@@ -227,8 +275,10 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation", "ui.tree"])
             }
         };
     })
-    .controller("TopicsCtrl", function ($scope, $location, $http, $routeParams, folders) {
+    .controller("TopicsCtrl", function ($scope, $location, $http, $routeParams, flash, folders) {
         $(document).foundation();
+
+        $scope.flash = flash;
 
         $scope.folders = folders.data;
         $scope.isLoading = true;

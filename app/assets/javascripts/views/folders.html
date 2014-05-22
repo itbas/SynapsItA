@@ -1,3 +1,10 @@
+<div data-alert class="alert-box success radius" ng-show="flash.isMessage() > 0">
+  <ul>
+    <li ng-repeat="msg in flash.getMessage()"><a ng-click="flash.delMessage(msg)">{{msg.content}}</a></li>
+  </ul>
+  <a class="close">&times;</a>
+</div>
+
 <div>
   <div id="editFolderModal" class="reveal-modal" data-reveal>
     <h3>Edit Folder</h3>

@@ -1,6 +1,6 @@
 class SearchController < ApplicationController
+  before_filter :authenticate_user!
 	before_action :set_search, only: [:tags, :topics, :posts]
-	skip_before_action :verify_authenticity_token
   respond_to :json
 
   def topics

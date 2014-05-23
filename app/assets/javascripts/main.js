@@ -70,7 +70,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation", "ui.tree"])
 
             if (str.lastIndexOf(".jpg") > 0 || str.lastIndexOf(".gif") > 0 || str.lastIndexOf(".png") > 0) {
                 retStr = $sce.trustAsHtml(str.
-                                            replace(/(http[^\s]+)/g, '<a href="$1" target="_blank"><img src="$1" height="320" width="240"></a>')
+                                            replace(/(http[^\s]+)/g, '<div align="center"><a href="$1" target="_blank"><img style="padding: 3px 3px 3px 3px;" width="400" height="300" src="$1"></a></div>')
                                          );
             }
             else if (str.indexOf(".youtube.") > 0) {
@@ -81,7 +81,7 @@ angular.module("myapp", ["ngRoute", "ngAnimate", "mm.foundation", "ui.tree"])
                 retStr = $sce.trustAsHtml(str.
                                             replace("m.youtube.", "www.youtube.").
                                             replace("watch?v=", "embed/").
-                                            replace(/(http[^\s]+)/g, '<div class="flex-video"><iframe width="320" height="240" src="$1" frameborder="0" allowfullscreen></iframe></div>')
+                                            replace(/(http[^\s]+)/g, '<div align="center"><iframe width="400" height="300" src="$1" frameborder="0" allowfullscreen></iframe></div>')
                                          );
             }
             else {
